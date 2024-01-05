@@ -17,7 +17,8 @@ Laboratorio.init({
   sequelize,
   modelName: "Laboratorio", //nombre del modelo
   tableName: "Laboratorios", //nombre de la tabla
-  timestamps: false
+  timestamps: false,
+  freezeTableName: true
 });
 
 export { Laboratorio };

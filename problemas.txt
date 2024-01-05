@@ -1,0 +1,1 @@
+*clave foranea de Laboratorio se guarda como PaiId en lugar de PaisId, y si la quiero poner explicitamente se gragan las 2

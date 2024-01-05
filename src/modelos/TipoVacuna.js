@@ -1,24 +1,24 @@
 import { DataTypes, Model }from "sequelize";
 import { sequelize } from "../config/sequelize.js";
 
-class Pais extends Model { }
+class TipoVacuna extends Model { }
 
-Pais.init({
+TipoVacuna.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  nombre: {
+  tipo: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: false
   }
 }, {
   sequelize,
-  modelName: "Pais", //nombre del modelo
-  tableName: "Paises", //nombre de la tabla
+  modelName: "TipoVacuna", //nombre del modelo
+  tableName: "TiposVacunas", //nombre de la tabla
   timestamps: false,
   freezeTableName: true
 });
 
-export { Pais };
+export { TipoVacuna };

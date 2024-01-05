@@ -1,6 +1,8 @@
 import { app } from "./app.js";
 import { sequelize } from "./config/sequelize.js";
-import { Laboratorio, Pais } from "./modelos/relaciones/Laboratorio-Pais.js";
+// import { Laboratorio, Pais } from "./modelos/relaciones/Laboratorio-Pais.js";
+// import { Lote, TipoVacuna } from "./modelos/relaciones/Lote-TipoVacuna.js";
+import { Lote, Laboratorio } from "./modelos/relaciones/Lote-Laboratorio.js";
 
 const PORT = 3000;
 app.listen(PORT, () => {
@@ -19,6 +21,6 @@ async function pruebaBD() {
 } 
 
 async function pruebaSync() {
-  await Laboratorio.sync();
-  await Pais.sync();
+  await Laboratorio.sync({alter: true});
+  await Lote.sync({alter: true});
 }
