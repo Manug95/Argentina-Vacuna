@@ -11,27 +11,53 @@ Lote.init({
   },
   nombreComercial: {
     type: DataTypes.STRING(50),
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [1, 50]
+    }
   },
   cantidad: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isNumeric: true,
+      isInt: true,
+      notNull: true,
+      min: 0
+    }
   },
   vencimiento: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isDate: true,
+      notNull: true
+    }
   },
   fechaFabricacion: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isDate: true,
+      notNull: true
+    }
   },
   fechaCompra: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isDate: true,
+      notNull: true
+    }
   },
   fechaAdquisicion: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isDate: true,
+      notNull: true
+    }
   }
 }, {
   sequelize,

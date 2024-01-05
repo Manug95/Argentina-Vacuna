@@ -1,13 +1,11 @@
 import { Laboratorio } from "../Laboratorio.js";
-import { Pais } from "../Pais.js";
+import { Country } from "../Country.js";
 
-Pais.hasMany(Laboratorio, {
-  foreignKey: 'paisId'
-});
-Laboratorio.belongsTo(Pais);
+Country.hasMany(Laboratorio);
+Laboratorio.belongsTo(Country);
 
 export {
-  Pais,
+  Country,
   Laboratorio
 }
 

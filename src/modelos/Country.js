@@ -1,9 +1,9 @@
 import { DataTypes, Model }from "sequelize";
 import { sequelize } from "../config/sequelize.js";
 
-class Pais extends Model { }
+class Country extends Model { }
 
-Pais.init({
+Country.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,13 +12,17 @@ Pais.init({
   nombre: {
     type: DataTypes.STRING(50),
     allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [1, 50]
+    }
   }
 }, {
   sequelize,
-  modelName: "Pais", //nombre del modelo
-  tableName: "Paises", //nombre de la tabla
+  modelName: "Country", //nombre del modelo
+  tableName: "Countries", //nombre de la tabla
   timestamps: false,
   freezeTableName: true
 });
 
-export { Pais };
+export { Country };

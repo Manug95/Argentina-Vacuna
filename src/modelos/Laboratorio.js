@@ -11,7 +11,11 @@ Laboratorio.init({
   },
   nombre: {
     type: DataTypes.STRING(50),
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [1, 50]
+    }
   }
 }, {
   sequelize,
