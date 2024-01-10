@@ -6,8 +6,8 @@ class Lote extends Model { }
 Lote.init({
   nroLote: {
     type: DataTypes.INTEGER,
-    // primaryKey: true,
-    // autoIncrement: true
+    primaryKey: true,
+    autoIncrement: true
   },
   nombreComercial: {
     type: DataTypes.STRING(50),
@@ -15,16 +15,6 @@ Lote.init({
     validate: {
       notEmpty: true,
       len: [1, 50]
-    }
-  },
-  cantidad: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    validate: {
-      isNumeric: true,
-      isInt: true,
-      notNull: true,
-      min: 0
     }
   },
   vencimiento: {
@@ -36,22 +26,6 @@ Lote.init({
     }
   },
   fechaFabricacion: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      isDate: true,
-      notNull: true
-    }
-  },
-  fechaCompra: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      isDate: true,
-      notNull: true
-    }
-  },
-  fechaAdquisicion: {
     type: DataTypes.DATE,
     allowNull: false,
     validate: {

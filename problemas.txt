@@ -1,2 +1,5 @@
 *clave foranea de Laboratorio se guarda como PaiId en lugar de PaisId, y si la quiero poner explicitamente se gragan las 2
 SOL: era porque pais termina con 's' y al tener configurada la tabla con freezeTableName, el ORM interpretaba la 's' final como si fuera una palabra en plurar en ingles
+
+*ReferenceError: Cannot access 'Almacena' before initialization sequelize
+Estaba importando los modelos Lote y DepositoNacional en el modelo Almacena, generando asi una dependencia circular que probocaba este error
