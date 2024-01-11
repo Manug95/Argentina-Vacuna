@@ -31,23 +31,24 @@ Lote.belongsTo(TipoVacuna);
 Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "LoteId" });
 DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "DepositoId" });
 
-Lote.belongsToMany(DepositoProvincial, { through: DistribucionNacional, foreignKey: "LoteId"});
-DepositoProvincial.belongsToMany(Lote, { through: DistribucionNacional, foreignKey: "DepNacId"});
-Lote.hasMany(DepositoProvincial);
-DepositoProvincial.belongsTo(Lote);
-DepositoProvincial.hasMany(Lote);
-Lote.belongsTo(DepositoProvincial);
-DepositoNacional.belongsToMany(DistribucionNacional, { through: DistNacProv, foreignKey:"DepNacId" });
-DistribucionNacional.belongsToMany(DepositoNacional, { through: DistNacProv, foreignKey: "DistNacId" });
-DepositoNacional.hasMany(DistribucionNacional);
-DistribucionNacional.belongsTo(DepositoNacional);
-DistribucionNacional.hasMany(DepositoNacional);
-DepositoNacional.belongsTo(DistribucionNacional);
+// Lote.belongsToMany(DepositoProvincial, { through: DistribucionNacional, foreignKey: "LoteId"});
+// DepositoProvincial.belongsToMany(Lote, { through: DistribucionNacional, foreignKey: "DepNacId"});
+// Lote.hasMany(DepositoProvincial);
+// DepositoProvincial.belongsTo(Lote);
+// DepositoProvincial.hasMany(Lote);
+// Lote.belongsTo(DepositoProvincial);
+// DepositoNacional.belongsToMany(DistribucionNacional, { through: DistNacProv, foreignKey:"DepNacId" });
+// DistribucionNacional.belongsToMany(DepositoNacional, { through: DistNacProv, foreignKey: "DistNacId" });
+// DepositoNacional.hasMany(DistribucionNacional);
+// DistribucionNacional.belongsTo(DepositoNacional);
+// DistribucionNacional.hasMany(DepositoNacional);
+// DepositoNacional.belongsTo(DistribucionNacional);
 
 //Provincia-DepositoProvincial
 Provincia.hasMany(DepositoProvincial);
 DepositoProvincial.belongsTo(Provincia);
 
+//Localidad-CentroVacunacion
 Localidad.hasMany(CentroVacunacion);
 CentroVacunacion.belongsTo(Localidad);
 
