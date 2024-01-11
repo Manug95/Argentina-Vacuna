@@ -1,14 +1,29 @@
 import { app } from "./app.js";
 import { sequelize } from "./config/sequelize.js";
-import { Laboratorio, Country } from "./modelos/relaciones/Laboratorio-Pais.js";
-// import { Lote, TipoVacuna } from "./modelos/relaciones/Lote-TipoVacuna.js";
-// import { Lote, Laboratorio } from "./modelos/relaciones/Lote-Laboratorio.js";
+import pc from "picocolors";
+import { llenado } from "./paLlenar.js";
+
+import { NacProvLote } from "./modelos/NacProvLote.js";
+// import { Almacena } from "./modelos/Almacena.js";
+// import { Country } from "./modelos/Country.js";
+// import { DepositoNacional } from "./modelos/DepositoNacional.js";
+// import { DepositoProvincial } from "./modelos/DepositoProvincial.js";
+// import { DistribucionNacional } from "./modelos/DistribucionNacional.js";
+// import { Laboratorio } from "./modelos/Laboratorio.js";
+// import { Lote } from "./modelos/Lote.js";
+// import { TipoVacuna } from "./modelos/TipoVacuna.js";
+// import { DistNacProv } from "./modelos/DistNacProv.js";
+import * as modelos from "./modelos/relaciones.js";
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}...`);
 
-  pruebaSync();
+  // pruebaSync();
+
+  // llenado();
+
 });
 
 async function pruebaBD() {
@@ -20,7 +35,32 @@ async function pruebaBD() {
   }
 } 
 
-async function pruebaSync() {
-  await Country.sync({force: true});
-  await Laboratorio.sync({force: true});
+async function pruebaSync() {  //primero sincronizo los modelos y despues los modifico con las relaciones
+  try {
+  // await Almacena.sync();
+  // await sequelize.sync();
+
+  // await Country.sync({alter:true});
+  // await Laboratorio.sync({alter:true});
+  // await TipoVacuna.sync({alter:true});
+  // await DepositoNacional.sync({alter:true});
+  // await Lote.sync({alter:true});
+  // await DepositoProvincial.sync({alter:true});
+  // await Almacena.sync({alter:true});
+
+  await modelos.Country.sync({alter:true});
+  await modelos.Laboratorio.sync({alter:true});
+  await modelos.TipoVacuna.sync({alter:true});
+  await modelos.DepositoProvincial.sync({alter:true});
+  await modelos.Lote.sync({alter:true});
+  await modelos.DepositoNacional.sync({alter:true});
+  await modelos.Almacena.sync({alter:true});
+  await modelos.DistribucionNacional.sync({alter:true});
+  await modelos.DistNacProv.sync({alter:true});
+
+  // await NacProvLote.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
+  } catch(err) {
+    console.error(pc.red(err.parent.sqlMessage));
+    console.log(pc.green(err.parent.sql));
+  }
 }

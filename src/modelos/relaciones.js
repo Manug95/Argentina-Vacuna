@@ -6,6 +6,7 @@ import { TipoVacuna } from "./TipoVacuna.js";
 import { DepositoNacional } from "./DepositoNacional.js";
 import { DepositoProvincial } from "./DepositoProvincial.js";
 import { DistribucionNacional } from "./DistribucionNacional.js";
+import { DistNacProv } from "./DistNacProv.js";
 
 //Laboratorio-Pais
 Country.hasMany(Laboratorio);
@@ -22,9 +23,17 @@ Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "LoteId" }
 DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "DepositoId" });
 
 Lote.belongsToMany(DepositoProvincial, { through: DistribucionNacional, foreignKey: "LoteId"});
-DepositoProvincial.belongsToMany(Lote, { through: DistribucionNacional, foreignKey: "LoteId"});
-// DepositoNacional.belongsToMany(DistribucionNacional, { through: , foreignKey:"DepNacId" });
-// DistribucionNacional.belongsToMany(DepositoNacional, { through: , foreignKey: "DepProvId" });
+DepositoProvincial.belongsToMany(Lote, { through: DistribucionNacional, foreignKey: "DepNacId"});
+Lote.hasMany(DepositoProvincial);
+DepositoProvincial.belongsTo(Lote);
+DepositoProvincial.hasMany(Lote);
+Lote.belongsTo(DepositoProvincial);
+DepositoNacional.belongsToMany(DistribucionNacional, { through: DistNacProv, foreignKey:"DepNacId" });
+DistribucionNacional.belongsToMany(DepositoNacional, { through: DistNacProv, foreignKey: "DistNacId" });
+DepositoNacional.hasMany(DistribucionNacional);
+DistribucionNacional.belongsTo(DepositoNacional);
+DistribucionNacional.hasMany(DepositoNacional);
+DepositoNacional.belongsTo(DistribucionNacional);
 
 export {
   Country,
@@ -34,5 +43,6 @@ export {
   DepositoNacional,
   Almacena,
   DepositoProvincial,
-  DistribucionNacional
+  DistribucionNacional,
+  DistNacProv
 };
