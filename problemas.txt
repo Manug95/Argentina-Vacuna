@@ -3,3 +3,6 @@ SOL: era porque pais termina con 's' y al tener configurada la tabla con freezeT
 
 *ReferenceError: Cannot access 'Almacena' before initialization sequelize
 Estaba importando los modelos Lote y DepositoNacional en el modelo Almacena, generando asi una dependencia circular que probocaba este error
+
+*No se ponen los nobres como quiero el las columnas de las claves foraneas de las relaciones muchos a uno
+Hay que poner la propiedad foreignKey en ambos objetos de las opciones en la relacion (hasMany y belongsTo)

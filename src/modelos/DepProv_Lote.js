@@ -1,9 +1,15 @@
 import { DataTypes, Model }from "sequelize";
 import { sequelize } from "../config/sequelize.js";
 
-class DistribucionNacional extends Model { }
+class DepProv_Lote extends Model { }
 
-DistribucionNacional.init({
+DepProv_Lote.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false
+  },
   fechaSalida: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -33,10 +39,10 @@ DistribucionNacional.init({
   }
 }, {
   sequelize,
-  modelName: "DistribucionNacional", //nombre del modelo
-  tableName: "DistribucionNacional", //nombre de la tabla
+  modelName: "DepProv_Lote",
+  tableName: "DepProv_Lote",
   timestamps: false,
   freezeTableName: true
 });
 
-export { DistribucionNacional };
+export { DepProv_Lote };
