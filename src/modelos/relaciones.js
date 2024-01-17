@@ -12,6 +12,8 @@ import { Localidad } from "./Localidad.js";
 import { CentroVacunacion } from "./CentroVacunacion.js";
 import { PersonalSalud } from "./PersonalSalud.js";
 import { Descarte } from "./Descarte.js";
+import { CenVac_Lote } from "./CenVac_Lote.js";
+import { DepProv_CenVac_Lote } from "./DepProv_CenVac_Lote.js";
 
 //Laboratorio-Pais
 Country.hasMany(Laboratorio);
@@ -33,6 +35,7 @@ Lote.belongsTo(TipoVacuna);
 Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "LoteId" });
 DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "DepositoId" });
 
+//relacion super many to many entre Lote-DepositoProvincial-DepositoNacional
 Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
 DepositoProvincial.belongsToMany(Lote, { through: DepProv_Lote, sourceKey: "id", targetKey: "nroLote" });
 DepProv_Lote.belongsTo(Lote);
@@ -54,6 +57,20 @@ DepositoProvincial.belongsTo(Provincia, {foreignKey: "ProvinciaId"});
 Localidad.hasMany(CentroVacunacion);
 CentroVacunacion.belongsTo(Localidad);
 
+//relacion super many to many entre Lote-CentroVacunacion-DepositoProvincial
+Lote.belongsToMany(CentroVacunacion, { through: CenVac_Lote, sourceKey: "nroLote", targetKey: "id" });
+CentroVacunacion.belongsToMany(Lote, { through: CenVac_Lote, sourceKey: "id", targetKey: "nroLote" });
+CenVac_Lote.belongsTo(Lote);
+CenVac_Lote.belongsTo(CentroVacunacion);
+Lote.hasMany(CenVac_Lote);
+CentroVacunacion.hasMany(CenVac_Lote);
+DepositoProvincial.belongsToMany(CenVac_Lote, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
+CenVac_Lote.belongsToMany(DepositoProvincial, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
+DepProv_CenVac_Lote.belongsTo(DepositoProvincial);
+DepProv_CenVac_Lote.belongsTo(CenVac_Lote);
+DepositoProvincial.hasMany(DepProv_CenVac_Lote);
+CenVac_Lote.hasMany(DepProv_CenVac_Lote);
+
 PersonalSalud.hasMany(Descarte);
 Descarte.belongsTo(PersonalSalud);
 
@@ -71,6 +88,8 @@ export {
   Provincia,
   Localidad,
   CentroVacunacion,
+  CenVac_Lote,
+  DepProv_CenVac_Lote,
   PersonalSalud,
   Descarte
 };

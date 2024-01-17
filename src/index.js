@@ -5,8 +5,11 @@ import { llenado } from "./paLlenar.js";
 
 // import { CentroVacLoteDepProv } from "./modelos/CentroVacLoteDepProv.js";
 // import { NacProvLote } from "./modelos/NacProvLote.js";
+
 // import { DepNac_DepProv_Lote } from "./modelos/DepNac_DepProv_Lote.js";
 // import { DepProv_Lote } from "./modelos/DepProv_Lote.js";
+// import { CenVac_Lote } from "./modelos/CenVac_Lote.js";
+// import { DepProv_CenVac_Lote } from "./modelos/DepProv_CenVac_Lote.js";
 // import { Almacena } from "./modelos/Almacena.js";
 // import { Country } from "./modelos/Country.js";
 // import { DepositoNacional } from "./modelos/DepositoNacional.js";
@@ -17,6 +20,7 @@ import { llenado } from "./paLlenar.js";
 // import { Provincia } from "./modelos/Provincia.js";
 // import { Localidad } from "./modelos/Localidad.js";
 // import { CentroVacunacion } from "./modelos/CentroVacunacion.js";
+
 // import { Redistribucion } from "./modelos/Redistribucion.js";
 // import { Persona } from "./modelos/Persona.js";
 // import { PersonalSalud } from "./modelos/Personal.js";
@@ -58,7 +62,9 @@ async function pruebaSync() {  //primero sincronizo los modelos y despues los mo
   // await Almacena.sync()//.sync({alter:true});
   // await DepProv_Lote.sync();
   // await DepNac_DepProv_Lote.sync();
-  // await CentroVacunacion.sync({alter:true});
+  // await CentroVacunacion.sync();
+  // await CenVac_Lote.sync();
+  // await DepProv_CenVac_Lote.sync();
   // await Persona.sync({alter:true});
   // await Personal.sync({alter:true});
   // await Paciente.sync({alter:true});
@@ -75,6 +81,8 @@ async function pruebaSync() {  //primero sincronizo los modelos y despues los mo
   await modelos.Almacena.sync({alter:true});
   await modelos.DepProv_Lote.sync({alter:true});
   await modelos.DepNac_DepProv_Lote.sync({alter:true});
+  await modelos.CenVac_Lote.sync({alter:true});
+  await modelos.DepProv_CenVac_Lote.sync({alter:true});
   // await CentroVacLoteDepProv.sync({alter:true});
   // await NacProvLote.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   // await Redistribucion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
