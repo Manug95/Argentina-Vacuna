@@ -4,10 +4,10 @@ import { CentroVacunacion } from "./CentroVacunacion.js";
 import { DepositoProvincial } from "./DepositoProvincial.js";
 import { Lote } from "./Lote.js";
 
-class CentroVacLoteDepProv extends Model { }
+class DistribucionProvincial extends Model { }
 
-CentroVacLoteDepProv.init({
-  CentroVacId: {
+DistribucionProvincial.init({
+  CentroVacunacion: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -15,7 +15,7 @@ CentroVacLoteDepProv.init({
       key: "id"
     }
   },
-  DepProvId: {
+  DepositoProvincial: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -23,7 +23,7 @@ CentroVacLoteDepProv.init({
       key: "id"
     }
   },
-  LoteId: {
+  Lote: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -56,15 +56,15 @@ CentroVacLoteDepProv.init({
       isNumeric: true,
       isInt: true,
       notNull: true,
-      min: 0
+      min: 1
     }
   }
 }, {
   sequelize,
-  modelName: "CentroVacLoteDepProv",
-  tableName: "CentroVacLoteDepProv",
+  modelName: "DistribucionProvincial",
+  tableName: "DistribucionProvincial",
   timestamps: false,
   freezeTableName: true
 });
 
-export { CentroVacLoteDepProv };
+export { DistribucionProvincial };

@@ -16,63 +16,63 @@ import { CenVac_Lote } from "./CenVac_Lote.js";
 import { DepProv_CenVac_Lote } from "./DepProv_CenVac_Lote.js";
 
 //Laboratorio-Pais
-Country.hasMany(Laboratorio);
-Laboratorio.belongsTo(Country);
+Country.hasMany(Laboratorio, {foreignKey: "pais"});
+Laboratorio.belongsTo(Country, {foreignKey: "pais"});
 
 //Localidad-Provincia
-Provincia.hasMany(Localidad, {foreignKey: "ProvinciaId"});
-Localidad.belongsTo(Provincia, {foreignKey: "ProvinciaId"});
+Provincia.hasMany(Localidad, {foreignKey: "Provincia"});
+Localidad.belongsTo(Provincia, {foreignKey: "Provincia"});
 
 //Lote-Laboratorio
-Laboratorio.hasMany(Lote);
-Lote.belongsTo(Laboratorio);
+Laboratorio.hasMany(Lote, {foreignKey: "Lab"});
+Lote.belongsTo(Laboratorio, {foreignKey: "Lab"});
 
 //Lote-TipoVacuna
-TipoVacuna.hasMany(Lote);
-Lote.belongsTo(TipoVacuna);
+TipoVacuna.hasMany(Lote, {foreignKey: "Vacuna"});
+Lote.belongsTo(TipoVacuna, {foreignKey: "Vacuna"});
 
 //Lote-DepositoNacional por table Almacena
-Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "LoteId" });
-DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "DepositoId" });
+Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "Lote" });
+DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "Deposito" });
 
 //relacion super many to many entre Lote-DepositoProvincial-DepositoNacional
-Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
-DepositoProvincial.belongsToMany(Lote, { through: DepProv_Lote, sourceKey: "id", targetKey: "nroLote" });
-DepProv_Lote.belongsTo(Lote);
-DepProv_Lote.belongsTo(DepositoProvincial);
-Lote.hasMany(DepProv_Lote);
-DepositoProvincial.hasMany(DepProv_Lote);
-DepositoNacional.belongsToMany(DepProv_Lote, { through: DepNac_DepProv_Lote, sourceKey: "id", targetKey: "id"});
-DepProv_Lote.belongsToMany(DepositoNacional, { through: DepNac_DepProv_Lote, sourceKey: "id", targetKey: "id" });
-DepNac_DepProv_Lote.belongsTo(DepositoNacional);
-DepNac_DepProv_Lote.belongsTo(DepProv_Lote);
-DepositoNacional.hasMany(DepNac_DepProv_Lote);
-DepProv_Lote.hasMany(DepNac_DepProv_Lote);
+// Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
+// DepositoProvincial.belongsToMany(Lote, { through: DepProv_Lote, sourceKey: "id", targetKey: "nroLote" });
+// DepProv_Lote.belongsTo(Lote);
+// DepProv_Lote.belongsTo(DepositoProvincial);
+// Lote.hasMany(DepProv_Lote);
+// DepositoProvincial.hasMany(DepProv_Lote);
+// DepositoNacional.belongsToMany(DepProv_Lote, { through: DepNac_DepProv_Lote, sourceKey: "id", targetKey: "id"});
+// DepProv_Lote.belongsToMany(DepositoNacional, { through: DepNac_DepProv_Lote, sourceKey: "id", targetKey: "id" });
+// DepNac_DepProv_Lote.belongsTo(DepositoNacional);
+// DepNac_DepProv_Lote.belongsTo(DepProv_Lote);
+// DepositoNacional.hasMany(DepNac_DepProv_Lote);
+// DepProv_Lote.hasMany(DepNac_DepProv_Lote);
 
 //Provincia-DepositoProvincial
-Provincia.hasMany(DepositoProvincial, {foreignKey: "ProvinciaId"});
-DepositoProvincial.belongsTo(Provincia, {foreignKey: "ProvinciaId"});
+Provincia.hasMany(DepositoProvincial, {foreignKey: "Provincia"});
+DepositoProvincial.belongsTo(Provincia, {foreignKey: "Provincia"});
 
 //Localidad-CentroVacunacion
-Localidad.hasMany(CentroVacunacion);
-CentroVacunacion.belongsTo(Localidad);
+Localidad.hasMany(CentroVacunacion, {foreignKey: "Ciudad"});
+CentroVacunacion.belongsTo(Localidad, {foreignKey: "Ciudad"});
 
 //relacion super many to many entre Lote-CentroVacunacion-DepositoProvincial
-Lote.belongsToMany(CentroVacunacion, { through: CenVac_Lote, sourceKey: "nroLote", targetKey: "id" });
-CentroVacunacion.belongsToMany(Lote, { through: CenVac_Lote, sourceKey: "id", targetKey: "nroLote" });
-CenVac_Lote.belongsTo(Lote);
-CenVac_Lote.belongsTo(CentroVacunacion);
-Lote.hasMany(CenVac_Lote);
-CentroVacunacion.hasMany(CenVac_Lote);
-DepositoProvincial.belongsToMany(CenVac_Lote, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
-CenVac_Lote.belongsToMany(DepositoProvincial, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
-DepProv_CenVac_Lote.belongsTo(DepositoProvincial);
-DepProv_CenVac_Lote.belongsTo(CenVac_Lote);
-DepositoProvincial.hasMany(DepProv_CenVac_Lote);
-CenVac_Lote.hasMany(DepProv_CenVac_Lote);
+// Lote.belongsToMany(CentroVacunacion, { through: CenVac_Lote, sourceKey: "nroLote", targetKey: "id" });
+// CentroVacunacion.belongsToMany(Lote, { through: CenVac_Lote, sourceKey: "id", targetKey: "nroLote" });
+// CenVac_Lote.belongsTo(Lote);
+// CenVac_Lote.belongsTo(CentroVacunacion);
+// Lote.hasMany(CenVac_Lote);
+// CentroVacunacion.hasMany(CenVac_Lote);
+// DepositoProvincial.belongsToMany(CenVac_Lote, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
+// CenVac_Lote.belongsToMany(DepositoProvincial, { through: DepProv_CenVac_Lote, sourceKey: "id", targetKey: "id" });
+// DepProv_CenVac_Lote.belongsTo(DepositoProvincial);
+// DepProv_CenVac_Lote.belongsTo(CenVac_Lote);
+// DepositoProvincial.hasMany(DepProv_CenVac_Lote);
+// CenVac_Lote.hasMany(DepProv_CenVac_Lote);
 
-PersonalSalud.hasMany(Descarte);
-Descarte.belongsTo(PersonalSalud);
+// PersonalSalud.hasMany(Descarte);
+// Descarte.belongsTo(PersonalSalud);
 
 
 export {

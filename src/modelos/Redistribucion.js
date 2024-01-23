@@ -6,7 +6,7 @@ import { Lote } from "./Lote.js";
 class Redistribucion extends Model { }
 
 Redistribucion.init({
-  CentroOrigenId: {
+  CentroOrigen: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -14,7 +14,7 @@ Redistribucion.init({
       key: "id"
     }
   },
-  CentroDestinoId: {
+  CentroDestino: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -22,7 +22,7 @@ Redistribucion.init({
       key: "id"
     }
   },
-  LoteId: {
+  Lote: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {

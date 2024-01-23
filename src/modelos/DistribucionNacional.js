@@ -4,10 +4,10 @@ import { DepositoNacional } from "./DepositoNacional.js";
 import { DepositoProvincial } from "./DepositoProvincial.js";
 import { Lote } from "./Lote.js";
 
-class NacProvLote extends Model { }
+class DistribucionNacional extends Model { }
 
-NacProvLote.init({
-  DepNacId: {
+DistribucionNacional.init({
+  DepositoNacional: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -15,7 +15,7 @@ NacProvLote.init({
       key: "id"
     }
   },
-  DepProvId: {
+  DepositoProvincial: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -23,7 +23,7 @@ NacProvLote.init({
       key: "id"
     }
   },
-  LoteId: {
+  Lote: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -56,15 +56,15 @@ NacProvLote.init({
       isNumeric: true,
       isInt: true,
       notNull: true,
-      min: 0
+      min: 1
     }
   }
 }, {
   sequelize,
-  modelName: "NacProvLote", //nombre del modelo
-  tableName: "NacProvLote", //nombre de la tabla
+  modelName: "DistribucionNacional", //nombre del modelo
+  tableName: "DistribucionNacional", //nombre de la tabla
   timestamps: false,
   freezeTableName: true
 });
 
-export { NacProvLote};
+export { DistribucionNacional };
