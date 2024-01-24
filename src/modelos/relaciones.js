@@ -14,26 +14,28 @@ import { PersonalSalud } from "./PersonalSalud.js";
 import { Descarte } from "./Descarte.js";
 import { CenVac_Lote } from "./CenVac_Lote.js";
 import { DepProv_CenVac_Lote } from "./DepProv_CenVac_Lote.js";
+import { DistribucionNacional } from "./DistribucionNacional.js";
+import { DistribucionProvincial } from "./DistribucionProvincial.js";
 
 //Laboratorio-Pais
 Country.hasMany(Laboratorio, {foreignKey: "pais"});
 Laboratorio.belongsTo(Country, {foreignKey: "pais"});
 
 //Localidad-Provincia
-Provincia.hasMany(Localidad, {foreignKey: "Provincia"});
-Localidad.belongsTo(Provincia, {foreignKey: "Provincia"});
+Provincia.hasMany(Localidad, {foreignKey: "provincia"});
+Localidad.belongsTo(Provincia, {foreignKey: "provincia"});
 
 //Lote-Laboratorio
-Laboratorio.hasMany(Lote, {foreignKey: "Lab"});
-Lote.belongsTo(Laboratorio, {foreignKey: "Lab"});
+Laboratorio.hasMany(Lote, {foreignKey: "laboratorio"});
+Lote.belongsTo(Laboratorio, {foreignKey: "laboratorio"});
 
 //Lote-TipoVacuna
-TipoVacuna.hasMany(Lote, {foreignKey: "Vacuna"});
-Lote.belongsTo(TipoVacuna, {foreignKey: "Vacuna"});
+TipoVacuna.hasMany(Lote, {foreignKey: "tipoVacuna"});
+Lote.belongsTo(TipoVacuna, {foreignKey: "tipoVacuna"});
 
 //Lote-DepositoNacional por table Almacena
-Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "Lote" });
-DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "Deposito" });
+Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "lote" });
+DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "deposito" });
 
 //relacion super many to many entre Lote-DepositoProvincial-DepositoNacional
 // Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
@@ -50,12 +52,12 @@ DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "Deposito"
 // DepProv_Lote.hasMany(DepNac_DepProv_Lote);
 
 //Provincia-DepositoProvincial
-Provincia.hasMany(DepositoProvincial, {foreignKey: "Provincia"});
-DepositoProvincial.belongsTo(Provincia, {foreignKey: "Provincia"});
+Provincia.hasMany(DepositoProvincial, {foreignKey: "provincia"});
+DepositoProvincial.belongsTo(Provincia, {foreignKey: "provincia"});
 
 //Localidad-CentroVacunacion
-Localidad.hasMany(CentroVacunacion, {foreignKey: "Ciudad"});
-CentroVacunacion.belongsTo(Localidad, {foreignKey: "Ciudad"});
+Localidad.hasMany(CentroVacunacion, {foreignKey: "ciudad"});
+CentroVacunacion.belongsTo(Localidad, {foreignKey: "ciudad"});
 
 //relacion super many to many entre Lote-CentroVacunacion-DepositoProvincial
 // Lote.belongsToMany(CentroVacunacion, { through: CenVac_Lote, sourceKey: "nroLote", targetKey: "id" });
@@ -91,5 +93,7 @@ export {
   CenVac_Lote,
   DepProv_CenVac_Lote,
   PersonalSalud,
-  Descarte
+  Descarte,
+  DistribucionNacional,
+  DistribucionProvincial
 };

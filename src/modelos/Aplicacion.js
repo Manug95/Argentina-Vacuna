@@ -24,7 +24,7 @@ Aplicacion.init({
       key: "id"
     }
   },
-  Lote: {
+  lote: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {

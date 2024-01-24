@@ -7,7 +7,7 @@ import { Lote } from "./Lote.js";
 class DistribucionNacional extends Model { }
 
 DistribucionNacional.init({
-  DepositoNacional: {
+  depositoNacional: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -15,7 +15,7 @@ DistribucionNacional.init({
       key: "id"
     }
   },
-  DepositoProvincial: {
+  depositoProvincial: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -23,7 +23,7 @@ DistribucionNacional.init({
       key: "id"
     }
   },
-  Lote: {
+  lote: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
