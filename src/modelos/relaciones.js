@@ -36,6 +36,10 @@ Lote.belongsTo(TipoVacuna, {foreignKey: "tipoVacuna"});
 //Lote-DepositoNacional por table Almacena
 Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "lote" });
 DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "deposito" });
+Almacena.belongsTo(Lote);
+Almacena.belongsTo(DepositoNacional);
+Lote.hasMany(Almacena);
+DepositoNacional.hasMany(Almacena);
 
 //relacion super many to many entre Lote-DepositoProvincial-DepositoNacional
 // Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
