@@ -19,8 +19,8 @@ TipoVacuna.init({
   }
 }, {
   sequelize,
-  modelName: "TipoVacuna", //nombre del modelo
-  tableName: "TiposVacunas", //nombre de la tabla
+  modelName: "TipoVacuna",
+  tableName: "tipos_vacunas",
   timestamps: false,
   freezeTableName: true
 });

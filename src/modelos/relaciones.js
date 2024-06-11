@@ -22,8 +22,8 @@ Country.hasMany(Laboratorio, {foreignKey: "pais"});
 Laboratorio.belongsTo(Country, {foreignKey: "pais"});
 
 //Localidad-Provincia
-Provincia.hasMany(Localidad, {foreignKey: "provincia"});
-Localidad.belongsTo(Provincia, {foreignKey: "provincia"});
+// Provincia.hasMany(Localidad, {foreignKey: "provincia"});
+// Localidad.belongsTo(Provincia, {foreignKey: "provincia"});
 
 //Lote-Laboratorio
 Laboratorio.hasMany(Lote, {foreignKey: "laboratorio"});
@@ -36,10 +36,10 @@ Lote.belongsTo(TipoVacuna, {foreignKey: "tipoVacuna"});
 //Lote-DepositoNacional por table Almacena
 Lote.belongsToMany(DepositoNacional, { through: Almacena, foreignKey: "lote" });
 DepositoNacional.belongsToMany(Lote, { through: Almacena, foreignKey: "deposito" });
-Almacena.belongsTo(Lote);
-Almacena.belongsTo(DepositoNacional);
-Lote.hasMany(Almacena);
-DepositoNacional.hasMany(Almacena);
+Lote.hasMany(Almacena, { foreignKey: "lote" });
+Almacena.belongsTo(Lote, { foreignKey: "lote" });
+DepositoNacional.hasMany(Almacena, { foreignKey: "deposito" });
+Almacena.belongsTo(DepositoNacional, { foreignKey: "deposito" });
 
 //relacion super many to many entre Lote-DepositoProvincial-DepositoNacional
 // Lote.belongsToMany(DepositoProvincial, { through: DepProv_Lote, sourceKey: "nroLote", targetKey: "id" });
@@ -56,12 +56,12 @@ DepositoNacional.hasMany(Almacena);
 // DepProv_Lote.hasMany(DepNac_DepProv_Lote);
 
 //Provincia-DepositoProvincial
-Provincia.hasMany(DepositoProvincial, {foreignKey: "provincia"});
-DepositoProvincial.belongsTo(Provincia, {foreignKey: "provincia"});
+// Provincia.hasMany(DepositoProvincial, {foreignKey: "provincia"});
+// DepositoProvincial.belongsTo(Provincia, {foreignKey: "provincia"});
 
-//Localidad-CentroVacunacion
-Localidad.hasMany(CentroVacunacion, {foreignKey: "ciudad"});
-CentroVacunacion.belongsTo(Localidad, {foreignKey: "ciudad"});
+// //Localidad-CentroVacunacion
+// Localidad.hasMany(CentroVacunacion, {foreignKey: "ciudad"});
+// CentroVacunacion.belongsTo(Localidad, {foreignKey: "ciudad"});
 
 //relacion super many to many entre Lote-CentroVacunacion-DepositoProvincial
 // Lote.belongsToMany(CentroVacunacion, { through: CenVac_Lote, sourceKey: "nroLote", targetKey: "id" });

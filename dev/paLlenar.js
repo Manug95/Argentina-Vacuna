@@ -1,6 +1,6 @@
-import { sequelize } from "./config/sequelize.js";
+import { sequelize } from "../src/config/sequelize.js";
 import { Op } from "sequelize";
-import * as modelos from "./modelos/relaciones.js";
+import * as modelos from "../src/modelos/relaciones.js";
 import pc from "picocolors"
 
 export async function llenado() {
@@ -19,16 +19,16 @@ export async function llenado() {
   // })
   // .catch(err => console.error(pc.red(err)));
   try {
-    // await llenarPaises();
+    await llenarPaises();
     // await llenarProvincias();
     // await llenarLocalidades();
-    // await llenarLaboratorios();
-    // await llenarTiposVacunas();
-    // await llenarLotes();
-    // await llenarDepositoNacional();
+    await llenarLaboratorios();
+    await llenarTiposVacunas();
+    await llenarLotes();
+    await llenarDepositoNacional();
     // await llenarDepositoProvincial();
     // await llenarCentrosVacunacion();
-    // await llenarAlmacen();
+    await llenarAlmacen();
     // await llenarDistribucionNacional();
   } catch (err) {
     console.error(pc.red(err));
@@ -41,6 +41,7 @@ async function llenarPaises() {
     { nombre: "Alemania" },
     { nombre: "Japon" },
     { nombre: "Rusia" },
+    { nombre: "Inglaterra" }
   ]);
 }
 
@@ -50,6 +51,7 @@ async function llenarLaboratorios() {
     { nombre: "Laboratorio Yankee", pais: 1 },
     { nombre: "Laboratorio Ponja", pais: 3 },
     { nombre: "Laboratorio Ruso", pais: 4 },
+    { nombre: "Laboratorio Ingles", pais: 5 }
   ]);
 }
 
@@ -173,6 +175,13 @@ async function llenarLotes() {
       fechaFabricacion: new Date(2023, 0, 2),
       laboratorio: 1,
       tipoVacuna: 3
+    },
+    {
+      nombreComercial: "nombre5",
+      vencimiento: new Date(2025,6,24),
+      fechaFabricacion: new Date(2024, 0, 2),
+      laboratorio: 5,
+      tipoVacuna: 5
     }
   ]);
 }
@@ -205,6 +214,13 @@ async function llenarAlmacen() {
       fechaAdquisicion: new Date(2024,1,19),
       cantidad: 1000,
       lote: 4,
+      deposito: 1
+    },
+    {
+      fechaCompra: new Date(2024,5,18),
+      fechaAdquisicion: new Date(2024,5,28),
+      cantidad: 3500,
+      lote: 5,
       deposito: 1
     }
   ]);

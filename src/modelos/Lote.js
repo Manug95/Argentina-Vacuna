@@ -35,8 +35,8 @@ Lote.init({
   }
 }, {
   sequelize,
-  modelName: "Lote", //nombre del modelo
-  tableName: "Lotes", //nombre de la tabla
+  modelName: "Lote",
+  tableName: "lotes",
   timestamps: false,
   freezeTableName: true
 });

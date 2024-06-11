@@ -1,0 +1,6 @@
+Las vacunas estan en cajas identificadas por un lote. 
+Las vacuans tienen el lote de la caja a la que pertenecen. 
+Cada lote de vacunas corresponde a un tipo de vacuna en concreto, no puede haber varios tipos de vacunas de un mismo lote.
+
+
+El ministerio compra un lote de vacunas de x cantidad de dosis. Reparte sublotes de x cantidad cada uno a diferentes provincias.

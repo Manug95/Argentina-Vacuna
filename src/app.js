@@ -21,4 +21,4 @@ app.use(express.json());
 
 
 
-export {app};
+export { app };

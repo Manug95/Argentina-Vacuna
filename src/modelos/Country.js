@@ -19,8 +19,8 @@ Country.init({
   }
 }, {
   sequelize,
-  modelName: "Country", //nombre del modelo
-  tableName: "Countries", //nombre de la tabla
+  modelName: "Country",
+  tableName: "countries",
   timestamps: false,
   freezeTableName: true
 });
