@@ -1,3 +1,5 @@
+import pc from "picocolors";
+
 // import { DepNac_DepProv_Lote } from "../src/modelos/DepNac_DepProv_Lote.js";
 // import { DepProv_Lote } from "../src/modelos/DepProv_Lote.js";
 // import { DepProv_CenVac_Lote } from "../src/modelos/DepProv_CenVac_Lote.js";
@@ -11,6 +13,7 @@ import { DepositoProvincial } from "../src/modelos/DepositoProvincial.js";
 import { Laboratorio } from "../src/modelos/Laboratorio.js";
 import { Lote } from "../src/modelos/Lote.js";
 import { TipoVacuna } from "../src/modelos/TipoVacuna.js";
+import { Vacuna } from "../src/modelos/Vacuna.js";
 import { Provincia } from "../src/modelos/Provincia.js";
 import { Localidad } from "../src/modelos/Localidad.js";
 import { CentroVacunacion } from "../src/modelos/CentroVacunacion.js";
@@ -34,14 +37,15 @@ export async function pruebaBD() {
 export async function pruebaSync() {  //primero sincronizo los modelos y despues los modifico con las relaciones
   try {
   await Country.sync()
-  // await Provincia.sync()
-  // await Localidad.sync()
-  await Laboratorio.sync()
-  await TipoVacuna.sync()
-  await Lote.sync()
-  await DepositoNacional.sync()
-  // await DepositoProvincial.sync()
-  await Almacena.sync()
+  // await Provincia.sync();
+  // await Localidad.sync();
+  await Laboratorio.sync();
+  await TipoVacuna.sync();
+  await Vacuna.sync();
+  await Lote.sync();
+  await DepositoNacional.sync();
+  // await DepositoProvincial.sync();
+  await Almacena.sync();
   // await CentroVacunacion.sync();
   // await Persona.sync({alter:true});
   // await PersonalSalud.sync({alter:true});
@@ -55,6 +59,7 @@ export async function pruebaSync() {  //primero sincronizo los modelos y despues
   // await modelos.Localidad.sync({alter: true});
   await modelos.Laboratorio.sync({alter:true});
   await modelos.TipoVacuna.sync({alter:true});
+  await modelos.Vacuna.sync({alter:true});
   // await modelos.DepositoProvincial.sync({alter:true});
   await modelos.Lote.sync({alter:true});
   await modelos.DepositoNacional.sync({alter:true});

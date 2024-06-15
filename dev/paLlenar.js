@@ -19,16 +19,20 @@ export async function llenado() {
   // })
   // .catch(err => console.error(pc.red(err)));
   try {
-    await llenarPaises();
+    // await llenarPaises();
+
     // await llenarProvincias();
     // await llenarLocalidades();
-    await llenarLaboratorios();
-    await llenarTiposVacunas();
+
+    // await llenarLaboratorios();
+    // await llenarTiposVacunas();
+    // await llenarVacunas();
     await llenarLotes();
     await llenarDepositoNacional();
+
     // await llenarDepositoProvincial();
     // await llenarCentrosVacunacion();
-    await llenarAlmacen();
+    // await llenarAlmacen();
     // await llenarDistribucionNacional();
   } catch (err) {
     console.error(pc.red(err));
@@ -63,6 +67,21 @@ async function llenarTiposVacunas() {
     { tipo: "Antisarampionosa" },
     { tipo: "MMR" },
     { tipo: "Triple Viral" }
+  ]);
+}
+
+async function llenarVacunas() {
+  await modelos.Vacuna.bulkCreate([
+    { nombreComercial: "BCGarda", tipoVacuna_id: 1, laboratorio_id: 1 },
+    { nombreComercial: "AntiTet", tipoVacuna_id: 2, laboratorio_id: 2 },
+    { nombreComercial: "SABINarda", tipoVacuna_id: 3, laboratorio_id: 3 },
+    { nombreComercial: "Sin Sarampion", tipoVacuna_id: 4, laboratorio_id: 4 },
+    { nombreComercial: "MMR pro", tipoVacuna_id: 5, laboratorio_id: 5 },
+    { nombreComercial: "Triplarda", tipoVacuna_id: 6, laboratorio_id: 6 },
+    { nombreComercial: "BCgita", tipoVacuna_id: 1, laboratorio_id: 2 },
+    { nombreComercial: "Sin Tetanos", tipoVacuna_id: 2, laboratorio_id: 3 },
+    { nombreComercial: "Chau Sarampion", tipoVacuna_id: 4, laboratorio_id: 3 },
+    { nombreComercial: "The Treble", tipoVacuna_id: 6, laboratorio_id: 2 },
   ]);
 }
 
@@ -123,9 +142,11 @@ async function llenarLocalidades() {
 }
 
 async function llenarDepositoNacional() {
-  await modelos.DepositoNacional.create({
-    nombre: "Deposito Nacional A"
-  });
+  await modelos.DepositoNacional.bulkCreate([
+    { nombre: "Deposito Nacional A" },
+    { nombre: "Deposito Nacional B" },
+    { nombre: "Deposito Nacional C" }
+  ]);
 }
 
 async function llenarDepositoProvincial() {
@@ -149,39 +170,39 @@ async function llenarCentrosVacunacion() {
 async function llenarLotes() {
   await modelos.Lote.bulkCreate([
     {
-      nombreComercial: "nombre1",
-      vencimiento: new Date(2025,5,15),
+      // fechaCompra: new Date(2024,1,10),
       fechaFabricacion: new Date(2023, 0, 2),
-      laboratorio: 1,
-      tipoVacuna: 2
+      vencimiento: new Date(2025, 0, 2),
+      cantidad: 10000,
+      vacuna_id: 12
     },
     {
-      nombreComercial: "nombre2",
-      vencimiento: new Date(2025,5,15),
+      // fechaCompra: new Date(2024, 1, 15),
       fechaFabricacion: new Date(2023, 0, 2),
-      laboratorio: 2,
-      tipoVacuna: 1
+      vencimiento: new Date(2025, 0, 2),
+      cantidad: 5000,
+      vacuna_id: 11
     },
     {
-      nombreComercial: "nombre3",
-      vencimiento: new Date(2025,5,15),
+      // fechaCompra: new Date(2024 ,1, 20),
       fechaFabricacion: new Date(2023, 0, 2),
-      laboratorio: 3,
-      tipoVacuna: 2
+      vencimiento: new Date(2025, 0, 2),
+      cantidad: 1000,
+      vacuna_id: 15
     },
     {
-      nombreComercial: "nombre4",
-      vencimiento: new Date(2025,5,15),
+      // fechaCompra: new Date(2024, 1, 18),
       fechaFabricacion: new Date(2023, 0, 2),
-      laboratorio: 1,
-      tipoVacuna: 3
+      vencimiento: new Date(2025, 0, 2),
+      cantidad: 3500,
+      vacuna_id: 14
     },
     {
-      nombreComercial: "nombre5",
-      vencimiento: new Date(2025,6,24),
-      fechaFabricacion: new Date(2024, 0, 2),
-      laboratorio: 5,
-      tipoVacuna: 5
+      // fechaCompra: new Date(2024, 5, 18),
+      fechaFabricacion: new Date(2023, 0, 2),
+      vencimiento: new Date(2025, 0, 2),
+      cantidad: 1000,
+      vacuna_id: 13
     }
   ]);
 }
@@ -189,37 +210,22 @@ async function llenarLotes() {
 async function llenarAlmacen() {
   await modelos.Almacena.bulkCreate([
     {
-      fechaCompra: new Date(2024,1,10),
-      fechaAdquisicion: new Date(2024,1,11),
-      cantidad: 10000,
       lote: 1,
       deposito: 1
     },
     {
-      fechaCompra: new Date(2024,1,15),
-      fechaAdquisicion: new Date(2024,1,16),
-      cantidad: 5000,
       lote: 2,
       deposito: 1
     },
     {
-      fechaCompra: new Date(2024,1,20),
-      fechaAdquisicion: new Date(2024,1,23),
-      cantidad: 1000,
       lote: 3,
       deposito: 1
     },
     {
-      fechaCompra: new Date(2024,1,18),
-      fechaAdquisicion: new Date(2024,1,19),
-      cantidad: 1000,
       lote: 4,
       deposito: 1
     },
     {
-      fechaCompra: new Date(2024,5,18),
-      fechaAdquisicion: new Date(2024,5,28),
-      cantidad: 3500,
       lote: 5,
       deposito: 1
     }

@@ -6,53 +6,17 @@ import { DepositoNacional } from "./DepositoNacional.js";
 class Almacena extends Model { }
 
 Almacena.init({
-  // idLote: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: Lote,
-  //     key: 'nroLote',
-  //   },
-  // },
-  // idDeposito: {
-  //   type: DataTypes.INTEGER,
-  //   references: {
-  //     model: DepositoNacional,
-  //     key: 'id',
-  //   },
-  // },
-  fechaCompra: {
+  fechaAdquisicion: {
     type: DataTypes.DATE,
-    allowNull: false,
     defaultValue: DataTypes.NOW,
-    validate: {
-      isDate: true,
-      notNull: true
-    }
-  },
-  // fechaAdquisicion: {
-  //   type: DataTypes.DATE,
-  //   allowNull: false,
-  //   validate: {
-  //     isDate: true,
-  //     notNull: true
-  //   }
-  // },
-  cantidad: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    validate: {
-      isNumeric: true,
-      isInt: true,
-      notNull: true,
-      min: 1
-    }
+    field: 'fecha_adquisicion',
   }
 }, {
   sequelize,
   modelName: "Almacena",
   tableName: "almacena",
   timestamps: true,
-  createdAt: "fecha_adquisicion",
+  createdAt: false,
   updatedAt: true,
   freezeTableName: true,
   // unique: false
