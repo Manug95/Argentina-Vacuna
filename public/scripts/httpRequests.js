@@ -28,6 +28,20 @@ const optionsPATCH = {
 
 
 /**
+ * Realiza la peticion GET al servidor
+ * @param {String} url La url a donde se enviaran los datos de la peticion
+ */
+async function enviarGET(url) {
+
+  const respuesta = await fetch(url);
+  const datosRespuesta = await respuesta.json();
+  return datosRespuesta;
+
+}
+
+
+
+/**
  * Realiza la peticion POST al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
@@ -97,6 +111,7 @@ async function enviarPATCH(url, datos) {
 
 
 export {
+  enviarGET,
   enviarPOST,
   enviarDELETE,
   enviarPUT,

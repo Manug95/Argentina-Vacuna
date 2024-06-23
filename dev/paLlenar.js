@@ -21,16 +21,16 @@ export async function llenado() {
   try {
     // await llenarPaises();
 
-    // await llenarProvincias();
+    await llenarProvincias();
     // await llenarLocalidades();
 
     // await llenarLaboratorios();
     // await llenarTiposVacunas();
     // await llenarVacunas();
-    await llenarLotes();
-    await llenarDepositoNacional();
+    // await llenarLotes();
+    // await llenarDepositoNacional();
 
-    // await llenarDepositoProvincial();
+    await llenarDepositoProvincial();
     // await llenarCentrosVacunacion();
     // await llenarAlmacen();
     // await llenarDistribucionNacional();

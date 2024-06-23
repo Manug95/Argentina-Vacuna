@@ -20,7 +20,7 @@ Provincia.init({
 }, {
   sequelize,
   modelName: "Provincia",
-  tableName: "Provincias",
+  tableName: "provincias",
   timestamps: false,
   freezeTableName: true
 });

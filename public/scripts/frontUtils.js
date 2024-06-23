@@ -62,13 +62,26 @@ function cantidadHijosDeUnElemento(id) {
 function mostrarMensaje(ok, mensaje) {
   const myModal = new bootstrap.Modal(getElementById('modal-mensaje'), {});
   if (ok) {
-    mensajeExito(mensaje);
+    mensajeExito(mensaje, "mensaje");
     myModal.show();
   }
   else {
-    mensajeError(mensaje);
+    mensajeError(mensaje, "mensaje");
     myModal.show();
   }
+}
+
+
+
+/**
+ * Abre un modal mostrando un mensaje con el estado de la peticion al servidor
+ * @param {Boolean} ok Booleano que indica si la peticion fue exitosa o no
+ * @param {*} mensaje El mensaje de exito o no de la peticion que contiene la respuesta
+ */
+function mostrarPregunta(pregunta) {
+  const myModal = new bootstrap.Modal(getElementById('modal-pregunta'), {});
+  mensajeError(pregunta, "pregunta");
+  myModal.show();
 }
 
 
@@ -77,8 +90,9 @@ function mostrarMensaje(ok, mensaje) {
  * 
  * @param {String} mensaje Es el mensaje a mostrar en el modal
  */
-function mensajeError(mensaje) {
-  const cartel = getElementById("mensaje");
+function mensajeError(mensaje, elem_id) {
+  // const cartel = getElementById("mensaje");
+  const cartel = getElementById(elem_id);
 
   // quitarClaseSuccess(cartel);
   // agregarClaseDanger(cartel);
@@ -95,8 +109,9 @@ function mensajeError(mensaje) {
  * 
  * @param {String} mensaje Es el mensaje a mostrar en el modal
  */
-function mensajeExito(mensaje) {
-  const cartel = getElementById("mensaje");
+function mensajeExito(mensaje, elem_id) {
+  // const cartel = getElementById("mensaje");
+  const cartel = getElementById(elem_id);
 
   // quitarClaseDanger(cartel);
   // agregarClaseSuccess(cartel);
@@ -125,6 +140,27 @@ function agregarClases(el, ...clases) {
  */
 function removerClases(el, ...clases) {
   el.classList.remove(...clases);
+}
+
+
+
+function createElement( el, { id, value, name, selected, disabled, content }, ...classes ) {
+  const elemento = document.createElement(el);
+
+  if (id) elemento.id = id;
+  if (value) elemento.value = value;
+  if (name) elemento.name = name;
+  if (selected) elemento.selected = selected;
+  if (disabled) elemento.disabled = disabled;
+  if (content instanceof HTMLElement) {
+    elemento.innerHTML = content;
+  } else if (typeof content === "string") {
+    elemento.textContent = content;
+  }
+
+  agregarClases(elemento, ...classes);
+
+  return elemento;
 }
 
 
@@ -161,6 +197,8 @@ export {
   getElementById,
   bloquearEspacios,
   mostrarMensaje,
+  mostrarPregunta,
   recargar,
-  obtenerIdDelCampoHidden
+  obtenerIdDelCampoHidden,
+  createElement
 }

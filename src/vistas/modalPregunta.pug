@@ -1,0 +1,12 @@
+#modal-pregunta.modal.fade.modal-sm(tabindex="-1", aria-labelledby="titulo-modal", aria-hidden="true")
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header
+        #titulo-modal.modal-title.fs-5 Notificación
+        button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
+      .modal-body.justify-content-center.align-items-center
+        //- p#pregunta.text-center ¿Está seguro de eliminar el registro?
+        p#pregunta.text-center.fw-bold.fs-4 
+      .modal-footer.justify-content-around
+        button#btn-si.btn.btn-outline-success(type="button", data-bs-dismiss="modal") SI
+        button#btn-no.btn.btn-outline-danger(type="button", data-bs-dismiss="modal") NO

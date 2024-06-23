@@ -19,8 +19,8 @@ DepositoProvincial.init({
   }
 }, {
   sequelize,
-  modelName: "DepositoProvincial", //nombre del modelo
-  tableName: "DepositosProvinciales", //nombre de la tabla
+  modelName: "DepositoProvincial",
+  tableName: "depositos_provinciales",
   timestamps: false,
   freezeTableName: true
 });

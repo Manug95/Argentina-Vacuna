@@ -1,10 +1,16 @@
 import { Router } from "express";
+import { solicitarRouter } from "./lote.solicitar.router.js";
 import { LoteController } from "../controladores/lote.controller.js";
 
 const loteRouter = Router();
 
 
-loteRouter.get("/comprar", LoteController.vistaLComprarLote);
+loteRouter.use("/solicitar", solicitarRouter);
+
+
+loteRouter.get("/comprar", LoteController.vistaComprarLote);
+
+// loteRouter.get("/solicitar", LoteController.vistaSolicitarLote);
 
 // loteRouter.get("/registrar", LoteController.vistaRegistro);
 

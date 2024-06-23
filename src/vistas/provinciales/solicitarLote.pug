@@ -8,7 +8,7 @@ block scripts
 
 block contenido
     .container-md.mt-3 
-        h1(class="text-center") Comprar Vacunas
+        h1(class="text-center") Solicitar Vacunas
         
         form(id="solicitar-lote-form" class="p-3 mx-auto border rounded-4 shadow-sm w-75 needs-validation mt-3")
             .row.mb-md-4.mt-3 
@@ -18,26 +18,27 @@ block contenido
                         select#vacuna(name="vacuna", class="form-select", aria-label="vacuna")
                             option(value="", selected, disabled) Seleccionar vacuna 
                             each vacuna in vacunas
-                                option(value=vacuna.id) #{vacuna.TipoVacuna.tipo} (#{vacuna.Laboratorio.nombre})
+                                option(value=vacuna.TipoVacuna.id) #{vacuna.TipoVacuna.tipo}
                         .invalid-tooltip Este campo es requerido
                 .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
                     .position-relative
                         label(for="cantidad" class="form-label fw-bold") Cantidad
                         select#cantidad(name="cantidad", class="form-select", aria-label="cantida vacunas a comprar")
                             option(value="", selected, disabled) Seleccionar la cantidad 
+                            option(value="100000") 100.000 
+                            option(value="200000") 200.000 
+                            option(value="300000") 300.000 
+                            option(value="400000") 400.000 
                             option(value="500000") 500.000 
-                            option(value="1000000") 1.000.000 
-                            option(value="2000000") 2.000.000 
-                            option(value="3000000") 3.000.000 
-                            option(value="5000000") 5.000.000 
                         .invalid-tooltip Este campo es requerido
+                block selects
             .row.mb-4 
-                .col-12.col-md-6.col-lg-4.offset-lg-2.mb-3.mb-md-0
+                .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
                     .position-relative
-                        label(for="deposito-nacional" class="form-label fw-bold") Almacenar en
-                        select#deposito-nacional(name="deposito", class="form-select", aria-label="deposito nacional")
-                            option(value="", selected, disabled) Seleccionar deposito 
-                            each deposito in depositos
+                        label(for="deposito-provincial" class="form-label fw-bold") Almacenar en
+                        select#deposito-provincial(name="depositoProv", class="form-select", aria-label="deposito provincial")
+                            option(value="", selected, disabled) Seleccionar deposito provincial
+                            each deposito in depositosProv
                                 option(value=deposito.id) #{deposito.nombre} 
                         .invalid-tooltip Este campo es requerido
             .row.mb-3.justify-content-center 
@@ -45,3 +46,4 @@ block contenido
                     input(type="submit", value="Solicitar", class="btn btn-primary d-block mx-auto") 
 
     include ../modalMensaje.pug
+    //- include ../modalPregunta.pug

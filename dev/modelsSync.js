@@ -12,6 +12,7 @@ import { DepositoNacional } from "../src/modelos/DepositoNacional.js";
 import { DepositoProvincial } from "../src/modelos/DepositoProvincial.js";
 import { Laboratorio } from "../src/modelos/Laboratorio.js";
 import { Lote } from "../src/modelos/Lote.js";
+import { SubLote } from "../src/modelos/SubLote.js";
 import { TipoVacuna } from "../src/modelos/TipoVacuna.js";
 import { Vacuna } from "../src/modelos/Vacuna.js";
 import { Provincia } from "../src/modelos/Provincia.js";
@@ -36,34 +37,37 @@ export async function pruebaBD() {
 
 export async function pruebaSync() {  //primero sincronizo los modelos y despues los modifico con las relaciones
   try {
-  await Country.sync()
+  // await Country.sync();
   // await Provincia.sync();
   // await Localidad.sync();
-  await Laboratorio.sync();
-  await TipoVacuna.sync();
-  await Vacuna.sync();
-  await Lote.sync();
-  await DepositoNacional.sync();
+  // await Laboratorio.sync();
+  // await TipoVacuna.sync();
+  // await Vacuna.sync();
+  // await Lote.sync();
+  // await SubLote.sync();
+  // await DepositoNacional.sync();
   // await DepositoProvincial.sync();
-  await Almacena.sync();
+  // await Almacena.sync();
   // await CentroVacunacion.sync();
   // await Persona.sync({alter:true});
   // await PersonalSalud.sync({alter:true});
   // await Paciente.sync({alter:true});
   // await Descarte.sync({alter: true});
-  // await DistribucionNacional.sync();
+  await DistribucionNacional.sync();
   // await DistribucionProvincial.sync();
 
-  await modelos.Country.sync({alter:true});
+  // await modelos.Country.sync({alter:true});
   // await modelos.Provincia.sync({alter:true});
   // await modelos.Localidad.sync({alter: true});
-  await modelos.Laboratorio.sync({alter:true});
-  await modelos.TipoVacuna.sync({alter:true});
-  await modelos.Vacuna.sync({alter:true});
-  // await modelos.DepositoProvincial.sync({alter:true});
-  await modelos.Lote.sync({alter:true});
-  await modelos.DepositoNacional.sync({alter:true});
-  await modelos.Almacena.sync({alter:true});
+  // await modelos.Laboratorio.sync({alter:true});
+  // await modelos.TipoVacuna.sync({alter:true});
+  // await modelos.Vacuna.sync({alter:true});
+  await modelos.DepositoProvincial.sync({alter:true});
+  // await modelos.Lote.sync({alter:true});
+  await modelos.SubLote.sync({alter:true});
+  // await modelos.DepositoNacional.sync({alter:true});
+  // await modelos.Almacena.sync({alter:true});
+  await modelos.DistribucionNacional.sync({alter:true});
   // await Redistribucion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   // await Aplicacion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   } catch(err) {
