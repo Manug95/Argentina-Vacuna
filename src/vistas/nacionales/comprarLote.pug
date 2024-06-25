@@ -16,9 +16,9 @@ block contenido
                     .position-relative
                         label(for="vacuna" class="form-label fw-bold") Vacuna
                         select#vacuna(name="vacuna", class="form-select", aria-label="vacuna")
-                            option(value="", selected, disabled) Seleccionar vacuna 
+                            option(value="", selected=!vacunaSolicitada, disabled) Seleccionar vacuna 
                             each vacuna in vacunas
-                                option(value=vacuna.id) #{vacuna.TipoVacuna.tipo} (#{vacuna.Laboratorio.nombre})
+                                option(value=vacuna.id, selected=vacunaSolicitada) #{vacuna.TipoVacuna.tipo} (#{vacuna.Laboratorio.nombre})
                         .invalid-tooltip Este campo es requerido
                 .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
                     .position-relative

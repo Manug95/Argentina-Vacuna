@@ -24,6 +24,7 @@ import { PersonalSalud } from "../src/modelos/PersonalSalud.js";
 import { Paciente } from "../src/modelos/Paciente.js";
 import { Aplicacion } from "../src/modelos/Aplicacion.js";
 import { Descarte } from "../src/modelos/relaciones.js";
+import { SolicitudCompra } from "../src/modelos/SolicitudCompra.js";
 import * as modelos from "../src/modelos/relaciones.js";
 
 export async function pruebaBD() {
@@ -42,6 +43,7 @@ export async function pruebaSync() {  //primero sincronizo los modelos y despues
   // await Localidad.sync();
   // await Laboratorio.sync();
   // await TipoVacuna.sync();
+  await SolicitudCompra.sync();
   // await Vacuna.sync();
   // await Lote.sync();
   // await SubLote.sync();
@@ -53,7 +55,7 @@ export async function pruebaSync() {  //primero sincronizo los modelos y despues
   // await PersonalSalud.sync({alter:true});
   // await Paciente.sync({alter:true});
   // await Descarte.sync({alter: true});
-  await DistribucionNacional.sync();
+  // await DistribucionNacional.sync();
   // await DistribucionProvincial.sync();
 
   // await modelos.Country.sync({alter:true});
@@ -61,13 +63,14 @@ export async function pruebaSync() {  //primero sincronizo los modelos y despues
   // await modelos.Localidad.sync({alter: true});
   // await modelos.Laboratorio.sync({alter:true});
   // await modelos.TipoVacuna.sync({alter:true});
+  await modelos.SolicitudCompra.sync({alter:true});
   // await modelos.Vacuna.sync({alter:true});
-  await modelos.DepositoProvincial.sync({alter:true});
+  // await modelos.DepositoProvincial.sync({alter:true});
   // await modelos.Lote.sync({alter:true});
-  await modelos.SubLote.sync({alter:true});
+  // await modelos.SubLote.sync({alter:true});
   // await modelos.DepositoNacional.sync({alter:true});
   // await modelos.Almacena.sync({alter:true});
-  await modelos.DistribucionNacional.sync({alter:true});
+  // await modelos.DistribucionNacional.sync({alter:true});
   // await Redistribucion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   // await Aplicacion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   } catch(err) {

@@ -1,13 +1,13 @@
 que el usuario del deposito que pide las vacunas elija a que deposito nacional pedirle, o que la solicitud se dirija automaticamente al deposito nacional mas cercano
 que tenga las vacunas solicitadas disponibles.
 
-crear un tabla de solicitudes de compra de vacunas y que el usuario nacional que tiene acceso a las comprar pueda ver las solicitudes para ver todas las vacunas que se requieren,
-y, en caso de que no sea posible comprar todas, pueda decidir cual/es comprar dependiendo de cual/es son las mas requeridas.
-
-cuando un deposito/centro vacunacion pide vacunas que que haya en stock, se guarde en la tabla de solicitudes el tipo de vacuna que se necesita
+LISTAR SOLICITUDES E COMPRA DE VACUNAS
+    *crear un tabla de solicitudes de compra de vacunas y que el usuario nacional que tiene acceso a las comprar pueda ver las solicitudes para ver todas las vacunas que se requieren,
+        y, en caso de que no sea posible comprar todas, pueda decidir cual/es comprar dependiendo de cual/es son las mas requeridas.
+    *cuando un deposito/centro vacunacion pide vacunas que no haya en stock, se guarde en la tabla de solicitudes el tipo de vacuna que se necesita.
+    *funcionabilidad para ordenar la tabla por columna.
+    *paginacion.
 
 personalizar el mensaje se error al solicitar vacunas.
-
-modularizar las validaciones.
 
 en los formularios de compra/solicitudes, que venga seleccionado el deposito/centro en que trabaja el usuario

@@ -42,6 +42,17 @@ function getElementById(id) {
 
 
 /**
+ * Recupera el value de un input de un formulario
+ * @param {String} id La id del input a recuperar
+ * @returns {String} El value del input
+ */
+function getFormInputValue(id) {
+  return getElementById(id).value;
+}
+
+
+
+/**
  * retorna la cantidad de elementos hijos que tiene un elemento html
  * @param {String} id del elemento que se quiere contar sus hijos
  * @returns {Number} la cantidad de hijos del elemento
@@ -195,6 +206,7 @@ export {
   removerClases,
   cantidadHijosDeUnElemento,
   getElementById,
+  getFormInputValue,
   bloquearEspacios,
   mostrarMensaje,
   mostrarPregunta,

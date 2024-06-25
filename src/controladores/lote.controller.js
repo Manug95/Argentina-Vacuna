@@ -1,36 +1,104 @@
-// const { datosUsuarioIncompletos, datosIncompletosLogin } = require("../server_scripts/validacionesDeModelos.js");
 import { Op } from "sequelize";
 import pug from "pug";
 import { faker } from '@faker-js/faker';
 import { randomUUID } from "node:crypto";
-import { Lote, TipoVacuna, Laboratorio, DepositoNacional, Almacena, Vacuna, DepositoProvincial, SubLote, DistribucionNacional } from "../modelos/relaciones.js";
+import { 
+  Lote, 
+  TipoVacuna, 
+  Laboratorio, 
+  DepositoNacional, 
+  Almacena, 
+  Vacuna, 
+  DepositoProvincial, 
+  SubLote, 
+  DistribucionNacional, 
+  SolicitudCompra 
+} from "../modelos/relaciones.js";
+
+const crearOpcionesDeListado = ({ orden, dir, offset, limit }) => {
+  const opciones = {};
+
+  // opciones.attributes = { exclude: ['estado'] },
+
+  opciones.include = [
+    {
+      model: TipoVacuna,
+      required: true
+    }
+  ];
+
+  opciones.where = {
+    estado: "PENDIENTE"
+  };
+
+  if (orden) {
+    opciones.order = [calcularOrden(orden, dir)];
+  }
+
+  if (offset) {
+    opciones.offset = offset;
+  }
+
+  if (limit) {
+    opciones.limit = limit;
+  }
+
+  return opciones;
+};
+
+const calcularOrden = (order, direccion) => {
+  const orden = [];
+
+  if (order === "tipo") {
+    orden.push(...[TipoVacuna, "tipo", direccion]);
+  }
+
+  if (order === "fecha") {
+    orden.push(...["fechaSolicitud", direccion]);
+  }
+
+  if (order === "cantidad") {
+    orden.push(...["cantidad", direccion]);
+  }
+
+  if (order === "estado") {
+    orden.push(...["estado", direccion]);
+  }
+
+  return orden;
+};
 
 export class LoteController {
 
   static async listar (req, res){
+    const resultadosConsultas = {};
+
     try {
-      const usuarios = await Usuario.findAll();
-  
-      res.status(200).json({
-        ok: true,
-        status: 200,
-        mensaje:"Usuarios recuperados con exito",
-        body: usuarios.map(u => {
-          return {
-            id: u.id_usuario, 
-            userName: `${u.nombreUsuario} - ${u.id_usuario}`,
-            permisos: []
-          }
-        })
+      // orden: "tipo", "fecha", "cantidad", "estado"
+      const { count, rows } = (await SolicitudCompra.findAndCountAll(crearOpcionesDeListado(req.query)))
+      // .map(s => s.toJSON())
+      // .map(s => {
+      //   s.fechaSolicitud = s.fechaSolicitud.toISOString().split("T")[0].split("-").reverse().join("-");
+      //   return s;
+      // });
+      resultadosConsultas.solicitudes = rows
+      .map(s => s.toJSON())
+      .map(s => {
+        s.fechaSolicitud = s.fechaSolicitud.toISOString().split("T")[0].split("-").reverse().join("-");
+        return s;
       });
+      resultadosConsultas.cantidadSolicitudes = count;
+      // resultadosConsultas.solicitudes = solicitudes;
     }
     catch (error) {
-      res.status(400).json({
-        ok: false,
-        status: 400,
-        mensaje:"Los usuarios no se pudieron recuperar",
-        body: null
-      });
+      console.error(error);
+    } finally {
+      res.send(pug.renderFile("src/vistas/nacionales/listadoSolicitudes.pug", {
+        pretty: true,
+        active: "listado-sol",
+        solicitudes: resultadosConsultas.solicitudes ?? [],
+        cantidadPaginadores: Math.floor(resultadosConsultas.cantidadSolicitudes / 10 + 1) ?? 0
+      }));
     }
   }
 
@@ -114,7 +182,15 @@ export class LoteController {
 
       
       if (!lote) {
-        throw new Error("no hay vacunas");
+        const solicitud = {
+          cantidad: body.cantidad,
+          estado: "PENDIENTE",
+          vacuna_id: body.tipoVacuna
+        }
+
+        await SolicitudCompra.create(solicitud);
+
+        throw new Error("No hay stock de la vacuna solicita. Se ha agregado a la lista de compras pendientes");
       }
 
       // creo la id del nuevo sublote
@@ -251,6 +327,7 @@ export class LoteController {
 
   static async vistaComprarLote (req, res) {
     const resultadosConsultas = {};
+    const { vacunaSolicitada } = req.query;
 
     try {
       const [ depositosNac, vacunas ] = await Promise.all([
@@ -270,7 +347,8 @@ export class LoteController {
         pretty: true,
         active: "comprar",
         depositos: resultadosConsultas.depositosNac ?? [],
-        vacunas: resultadosConsultas.vacunas ?? []
+        vacunas: resultadosConsultas.vacunas ?? [],
+        vacunaSolicitada
       }));
     }
 

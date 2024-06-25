@@ -3,6 +3,7 @@ import { LoteController } from "../controladores/lote.controller.js";
 
 const solicitarRouter = Router();
 
+solicitarRouter.get("/listar", LoteController.listar);
 
 solicitarRouter.get("/nacion", LoteController.vistaSolicitarLoteNacion);
 

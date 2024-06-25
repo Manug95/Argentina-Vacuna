@@ -1,6 +1,6 @@
 import { enviarPOST, enviarGET } from "./httpRequests.js";
-import { getElementById, createElement, mostrarPregunta, mostrarMensaje } from "./frontUtils.js";
-import { setInvalidInputStyle, setValidInputStyle } from "./validaciones.js";
+import { getElementById, getFormInputValue, createElement, mostrarPregunta, mostrarMensaje } from "./frontUtils.js";
+import { setInvalidInputStyle, setValidInputStyle, validarFormSelect } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", (e) => {
   [...document.getElementsByTagName("select")].forEach(s => {
@@ -79,10 +79,6 @@ function getFormValues() {
   };
 }
 
-function getFormInputValue(id) {
-  return getElementById(id).value;
-}
-
 function validarFormulario(values) {
   let isValid = true;
 
@@ -119,11 +115,4 @@ function validarFormulario(values) {
   }
 
   return isValid;
-}
-
-function validarFormSelect(value) {
-  if (value === "") {
-    return false;
-  }
-  return true;
 }

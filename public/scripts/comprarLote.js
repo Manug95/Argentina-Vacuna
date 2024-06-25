@@ -1,6 +1,6 @@
 import { enviarPOST } from "./httpRequests.js";
-import { getElementById } from "./frontUtils.js";
-import { setInvalidInputStyle, setValidInputStyle } from "./validaciones.js";
+import { getElementById, getFormInputValue } from "./frontUtils.js";
+import { setInvalidInputStyle, setValidInputStyle, validarFormSelect } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", (e) => {
   getElementById("comprar-lote-form").addEventListener("submit", (e) => {
@@ -24,10 +24,6 @@ function getFormValues() {
     cantidad: getFormInputValue("cantidad"),
     deposito: getFormInputValue("deposito-nacional")
   };
-}
-
-function getFormInputValue(id) {
-  return getElementById(id).value;
 }
 
 function validarFormulario(values) {
@@ -58,11 +54,4 @@ function validarFormulario(values) {
   }
 
   return isValid;
-}
-
-function validarFormSelect(value) {
-  if (value === "") {
-    return false;
-  }
-  return true;
 }

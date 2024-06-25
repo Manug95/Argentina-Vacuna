@@ -11,3 +11,10 @@ export function setInvalidInputStyle(id) {
   removerClases(input, "is-valid");
   agregarClases(input, "is-invalid");
 }
+
+export function validarFormSelect(value) {
+  if (value === "") {
+    return false;
+  }
+  return true;
+}

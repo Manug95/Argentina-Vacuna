@@ -31,7 +31,7 @@ const optionsPATCH = {
  * Realiza la peticion GET al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  */
-async function enviarGET(url) {
+export async function enviarGET(url) {
 
   const respuesta = await fetch(url);
   const datosRespuesta = await respuesta.json();
@@ -46,7 +46,7 @@ async function enviarGET(url) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-async function enviarPOST(url, datos) {
+export async function enviarPOST(url, datos) {
 
   optionsPOST.body = JSON.stringify(datos);
 
@@ -63,7 +63,7 @@ async function enviarPOST(url, datos) {
  * Realiza la peticion DELETE al servidor
  * @param {String} url La url, con la id del registro a borrar, a donde se enviara la peticion
  */
-async function enviarDELETE(url) {
+export async function enviarDELETE(url) {
 
   const respuesta = await fetch(url, optionsDELETE);
   const datosRespuesta = await respuesta.json();
@@ -79,7 +79,7 @@ async function enviarDELETE(url) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-async function enviarPUT(url, datos) {
+export async function enviarPUT(url, datos) {
 
   optionsPUT.body = JSON.stringify(datos);
 
@@ -97,7 +97,7 @@ async function enviarPUT(url, datos) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-async function enviarPATCH(url, datos) {
+export async function enviarPATCH(url, datos) {
 
   optionsPUT.body = JSON.stringify(datos);
 
@@ -106,14 +106,4 @@ async function enviarPATCH(url, datos) {
 
   mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
 
-}
-
-
-
-export {
-  enviarGET,
-  enviarPOST,
-  enviarDELETE,
-  enviarPUT,
-  enviarPATCH
 }

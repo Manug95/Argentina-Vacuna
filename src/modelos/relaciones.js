@@ -18,6 +18,7 @@ import { CenVac_Lote } from "./CenVac_Lote.js";
 import { DepProv_CenVac_Lote } from "./DepProv_CenVac_Lote.js";
 import { DistribucionNacional } from "./DistribucionNacional.js";
 import { DistribucionProvincial } from "./DistribucionProvincial.js";
+import { SolicitudCompra } from "./SolicitudCompra.js";
 
 //Laboratorio-Pais
 Country.hasMany(Laboratorio, {foreignKey: "pais_id"});
@@ -27,17 +28,21 @@ Laboratorio.belongsTo(Country, {foreignKey: "pais_id"});
 Laboratorio.hasMany(Vacuna, { foreignKey: "laboratorio_id" });
 Vacuna.belongsTo(Laboratorio, { foreignKey: "laboratorio_id" });
 
-//Lote-TipoVacuna
+//Vacuna-TipoVacuna
 TipoVacuna.hasMany(Vacuna, {foreignKey: "tipoVacuna_id"});
 Vacuna.belongsTo(TipoVacuna, {foreignKey: "tipoVacuna_id"});
+
+//SolicituCompra-TipoVacuna
+TipoVacuna.hasMany(SolicitudCompra, { foreignKey: "vacuna_id" });
+SolicitudCompra.belongsTo(TipoVacuna, { foreignKey: "vacuna_id" });
 
 //Localidad-Provincia
 // Provincia.hasMany(Localidad, {foreignKey: "provincia"});
 // Localidad.belongsTo(Provincia, {foreignKey: "provincia"});
 
 //Lote-Laboratorio
-Vacuna.hasMany(Lote, {foreignKey: "vacuna_id"});
-Lote.belongsTo(Vacuna, {foreignKey: "vacuna_id"});
+Vacuna.hasMany(Lote, { foreignKey: "vacuna_id" });
+Lote.belongsTo(Vacuna, { foreignKey: "vacuna_id" });
 
 //SubLote-Lote
 Lote.hasMany(SubLote, { foreignKey: "lote" });
@@ -103,6 +108,7 @@ export {
   Lote,
   SubLote,
   TipoVacuna,
+  SolicitudCompra,
   Vacuna,
   DepositoNacional,
   Almacena,
