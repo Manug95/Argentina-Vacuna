@@ -19,6 +19,8 @@ block contenido
                             option(value="", selected, disabled) Seleccionar vacuna 
                             each vacuna in vacunas
                                 option(value=vacuna.TipoVacuna.id) #{vacuna.TipoVacuna.tipo}
+                            else 
+                                option(value="", selected, disabled) error al obtener las vacunas 
                         .invalid-tooltip Este campo es requerido
                 .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
                     .position-relative
@@ -33,13 +35,15 @@ block contenido
                         .invalid-tooltip Este campo es requerido
                 block selects
             .row.mb-4 
-                .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
+                .col-12.col-md-6.col-lg-4.offset-lg-2.mb-3.mb-md-0
                     .position-relative
                         label(for="deposito-provincial" class="form-label fw-bold") Almacenar en
                         select#deposito-provincial(name="depositoProv", class="form-select", aria-label="deposito provincial")
                             option(value="", selected, disabled) Seleccionar deposito provincial
                             each deposito in depositosProv
                                 option(value=deposito.id) #{deposito.nombre} 
+                            else 
+                                option(value="", selected, disabled) error al obtener los depositos prov. 
                         .invalid-tooltip Este campo es requerido
             .row.mb-3.justify-content-center 
                 .col-2.d-flex.justify-content-center

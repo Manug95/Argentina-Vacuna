@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
   res.send(pug.renderFile("src/vistas/index.pug", {
     pretty: true,
-    active: "home",
+    activeLink: "home",
     estilos: "styles.css",
   }));
 });

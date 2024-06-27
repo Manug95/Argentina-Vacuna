@@ -1,4 +1,5 @@
 import { Op } from "sequelize";
+import { sequelize } from "../config/sequelize.js";
 import pug from "pug";
 import { faker } from '@faker-js/faker';
 import { randomUUID } from "node:crypto";
@@ -9,105 +10,21 @@ import {
   DepositoNacional, 
   Almacena, 
   Vacuna, 
-  DepositoProvincial, 
-  SubLote, 
-  DistribucionNacional, 
-  SolicitudCompra 
+  DepositoProvincial
 } from "../modelos/relaciones.js";
-
-const crearOpcionesDeListado = ({ orden, dir, offset, limit }) => {
-  const opciones = {};
-
-  // opciones.attributes = { exclude: ['estado'] },
-
-  opciones.include = [
-    {
-      model: TipoVacuna,
-      required: true
-    }
-  ];
-
-  opciones.where = {
-    estado: "PENDIENTE"
-  };
-
-  if (orden) {
-    opciones.order = [calcularOrden(orden, dir)];
-  }
-
-  if (offset) {
-    opciones.offset = offset;
-  }
-
-  if (limit) {
-    opciones.limit = limit;
-  }
-
-  return opciones;
-};
-
-const calcularOrden = (order, direccion) => {
-  const orden = [];
-
-  if (order === "tipo") {
-    orden.push(...[TipoVacuna, "tipo", direccion]);
-  }
-
-  if (order === "fecha") {
-    orden.push(...["fechaSolicitud", direccion]);
-  }
-
-  if (order === "cantidad") {
-    orden.push(...["cantidad", direccion]);
-  }
-
-  if (order === "estado") {
-    orden.push(...["estado", direccion]);
-  }
-
-  return orden;
-};
+import * as loteControladorUtils from "./utils/loteControladorUtils.js";
+import { StockNacionalError } from "../modelos/Errores/stockErrors.js";
+import { resolverError, isSotckNacionalError } from "../modelos/Errores/resolverErrores.js";
 
 export class LoteController {
-
-  static async listar (req, res){
-    const resultadosConsultas = {};
-
-    try {
-      // orden: "tipo", "fecha", "cantidad", "estado"
-      const { count, rows } = (await SolicitudCompra.findAndCountAll(crearOpcionesDeListado(req.query)))
-      // .map(s => s.toJSON())
-      // .map(s => {
-      //   s.fechaSolicitud = s.fechaSolicitud.toISOString().split("T")[0].split("-").reverse().join("-");
-      //   return s;
-      // });
-      resultadosConsultas.solicitudes = rows
-      .map(s => s.toJSON())
-      .map(s => {
-        s.fechaSolicitud = s.fechaSolicitud.toISOString().split("T")[0].split("-").reverse().join("-");
-        return s;
-      });
-      resultadosConsultas.cantidadSolicitudes = count;
-      // resultadosConsultas.solicitudes = solicitudes;
-    }
-    catch (error) {
-      console.error(error);
-    } finally {
-      res.send(pug.renderFile("src/vistas/nacionales/listadoSolicitudes.pug", {
-        pretty: true,
-        active: "listado-sol",
-        solicitudes: resultadosConsultas.solicitudes ?? [],
-        cantidadPaginadores: Math.floor(resultadosConsultas.cantidadSolicitudes / 10 + 1) ?? 0
-      }));
-    }
-  }
 
   static async crear(req, res){
     let status = 201;
     const respuesta = {};
 
+    const transaction = await sequelize.transaction();
     try {
-      const body = req.body;console.log(body);
+      const body = req.body;
       const nroLote = randomUUID();
       const vencimiento = faker.date.future();
       const fechaFabricacion = faker.date.recent();
@@ -125,111 +42,74 @@ export class LoteController {
         deposito: body.deposito,
       };
   
-      const nuevoLote = await Lote.create(lote);
-      const loteAlmacenado = await Almacena.create(almacen);
+      const nuevoLote = await Lote.create(lote, { transaction: transaction });
+      const loteAlmacenado = await Almacena.create(almacen, { transaction: transaction });
 
       respuesta.ok = true;
       respuesta.mensaje = "Operación exitosa";
+
+      await transaction.commit();
     }
     catch (error) {
       console.error(error);
       status = 400;
       respuesta.ok = false;
       respuesta.mensaje = error.name === "SequelizeUniqueConstraintError" ? "Un campo esta duplicado" : error.message.replace("Validation e", "E");
+
+      await transaction.rollback();
     }
     finally {
       res.status(status).json(respuesta);
     }
+
+    return;
   }
 
-  static async solicitar(req, res) {
+  static async enviarSubLoteADepositoProv(req, res) {
     let status = 201;
     const respuesta = {};
 
+    const t = await sequelize.transaction();
     try {
       const body = req.body;
 
-      // conseguir los lotes de las vacunas requeridas
-      const lote = await Lote.findOne({
-        attributes: ["nroLote", "vacuna_id", "cantidad"],
-        where: {
-          [Op.and]: [
-            {
-              cantidad: {
-                [Op.gte]: body.cantidad
-              }
-            },
-            {
-              vencimiento: {
-                [Op.gt]: new Date()
-              }
-            }
-          ]
-        },
-        include: [
-          {
-            model: Vacuna,
-            attributes: ["id", "tipoVacuna_id"],
-            required: true,
-            where: {
-              TipoVacuna_id: {
-                [Op.eq]: body.tipoVacuna
-              }
-            }
-          }
-        ]
-      });
-
+      const lote = await loteControladorUtils.traerLotesDeLasVacunasRequeridas(body);
       
       if (!lote) {
-        const solicitud = {
-          cantidad: body.cantidad,
-          estado: "PENDIENTE",
-          vacuna_id: body.tipoVacuna
-        }
-
-        await SolicitudCompra.create(solicitud);
-
-        throw new Error("No hay stock de la vacuna solicita. Se ha agregado a la lista de compras pendientes");
+        await loteControladorUtils.guardarSolicitudDeVacuna(body);
+        throw new StockNacionalError("No hay stock de la vacuna solicita. Se ha agregado a la lista de compras pendientes");
       }
 
-      // creo la id del nuevo sublote
-      const id = randomUUID();
-      
-      // creo y guardo el nuevo sublote
-      const nuevoSubLote = await SubLote.create({
-        id,
-        lote: lote.nroLote,
-        cantidad: body.cantidad
-      });
+      const nuevoSubLote = await loteControladorUtils.crearNuevoSubLote(lote, body, t);
 
       // guardo la relacion del nuevo sublote con el deposito provincial al que se envia
-      const subLoteDistribuido = await DistribucionNacional.create({
-        deposito: body.depositoProv,
-        sublote: nuevoSubLote.id,
-        fechaSalida: new Date(),
-        fechaLlegada: new Date()
-      });
+      await loteControladorUtils.crearDistribucionNacional(nuevoSubLote, body, t);
 
       // actualizo la cantidad de vacunas del lote al que se le hizo el sublote
-      const loteModificado = await Lote.update({ cantidad: lote.cantidad - body.cantidad }, {
-        where: {
-          nroLote: lote.nroLote
-        }
-      });
+      await loteControladorUtils.actualizarCantidadVacunasDeLote(lote, body, t);
 
       respuesta.ok = true;
-      respuesta.mensaje = "Operación exitosa";
+      respuesta.mensaje = "Vacunas enviadas";
+
+      await t.commit();
     }
     catch (error) {
-      // console.error(error);
-      status = 400;
+      const tipoErrorResuelto = resolverError(error);
+      console.log(tipoErrorResuelto.mensaje);
+      
+      status = tipoErrorResuelto.status
       respuesta.ok = false;
-      respuesta.mensaje = error.message;
+      respuesta.mensaje = tipoErrorResuelto.mensaje;
+
+      if (!(isSotckNacionalError(error))) {
+        await t.rollback();
+      }
     }
     finally {
       res.status(status).json(respuesta);
     }
+
+    return;
   }
 
   static async depositosConStock(req, res) {
@@ -300,6 +180,8 @@ export class LoteController {
     } finally {
       res.status(status).json(respuesta);
     }
+
+    return;
   }
 
   static async vistaRegistro (req, res){
@@ -345,7 +227,7 @@ export class LoteController {
     } finally {
       res.send(pug.renderFile("src/vistas/nacionales/comprarLote.pug", {
         pretty: true,
-        active: "comprar",
+        activeLink: "comprar",
         depositos: resultadosConsultas.depositosNac ?? [],
         vacunas: resultadosConsultas.vacunas ?? [],
         vacunaSolicitada
@@ -378,7 +260,7 @@ export class LoteController {
     } finally {
       res.send(pug.renderFile("src/vistas/provinciales/solicitarLote.pug", {
         pretty: true,
-        active: "sol-nac",
+        activeLink: "sol-nac",
         depositosProv: resultadosConsultas.depositosProv ?? [],
         vacunas: resultadosConsultas.vacunas ?? []
       }));
@@ -386,10 +268,31 @@ export class LoteController {
 
     return;
   }
+
+  static async vistaListadoSolicitudesDeCompra (req, res){
+    const resultadosConsultas = {
+      solicitudes: [],
+      count: 1,
+      error: false
+    };
+
+    try {
+      Object.assign(resultadosConsultas, await loteControladorUtils.findAndCountAllSolicitudCompra(req.query));
+    }
+    catch (error) {
+      resultadosConsultas.error = true;
+      console.log(error.message);
+    } finally {
+      res.send(pug.renderFile("src/vistas/nacionales/listadoSolicitudes.pug", {
+        pretty: true,
+        activeLink: "listado-sol",
+        solicitudes: resultadosConsultas.solicitudes,
+        cantidadPaginadores: Math.floor(resultadosConsultas.count / 10 + 1),
+        error: resultadosConsultas.error
+      }));
+    }
+
+    return;
+  }
   
 }
-
-
-
-
-

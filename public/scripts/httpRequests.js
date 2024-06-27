@@ -33,9 +33,22 @@ const optionsPATCH = {
  */
 export async function enviarGET(url) {
 
-  const respuesta = await fetch(url);
-  const datosRespuesta = await respuesta.json();
-  return datosRespuesta;
+  // const respuesta = await fetch(url);
+  // const datosRespuesta = await respuesta.json();
+  // return datosRespuesta;
+
+  let respuesta;
+  let datosRespuesta;
+
+  try {
+    respuesta = await fetch(url);
+    datosRespuesta = await respuesta.json();
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+    return datosRespuesta;
+  }
 
 }
 
@@ -50,10 +63,22 @@ export async function enviarPOST(url, datos) {
 
   optionsPOST.body = JSON.stringify(datos);
 
-  const respuesta = await fetch(url, optionsPOST);
-  const datosRespuesta = await respuesta.json();
+  // const respuesta = await fetch(url, optionsPOST);
+  // const datosRespuesta = await respuesta.json();
 
-  mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+
+  let respuesta;
+  let datosRespuesta;
+
+  try {
+    respuesta = await fetch(url, optionsPOST);
+    datosRespuesta = await respuesta.json();
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+  }
 
 }
 
@@ -65,10 +90,22 @@ export async function enviarPOST(url, datos) {
  */
 export async function enviarDELETE(url) {
 
-  const respuesta = await fetch(url, optionsDELETE);
-  const datosRespuesta = await respuesta.json();
+  // const respuesta = await fetch(url, optionsDELETE);
+  // const datosRespuesta = await respuesta.json();
 
-  mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+
+  let respuesta;
+  let datosRespuesta;
+
+  try {
+    respuesta = await fetch(url, optionsDELETE);
+    datosRespuesta = await respuesta.json();
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+  }
 
 }
 
@@ -83,10 +120,22 @@ export async function enviarPUT(url, datos) {
 
   optionsPUT.body = JSON.stringify(datos);
 
-  const respuesta = await fetch(url, optionsPUT);
-  const datosRespuesta = await respuesta.json();
+  // const respuesta = await fetch(url, optionsPUT);
+  // const datosRespuesta = await respuesta.json();
 
-  mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+
+  let respuesta;
+  let datosRespuesta;
+  
+  try {
+    respuesta = await fetch(url, optionsPUT);
+    datosRespuesta = await respuesta.json();
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+  }
 
 }
 
@@ -99,11 +148,23 @@ export async function enviarPUT(url, datos) {
  */
 export async function enviarPATCH(url, datos) {
 
-  optionsPUT.body = JSON.stringify(datos);
+  optionsPATCH.body = JSON.stringify(datos);
 
-  const respuesta = await fetch(url, optionsPATCH);
-  const datosRespuesta = await respuesta.json();
+  // const respuesta = await fetch(url, optionsPATCH);
+  // const datosRespuesta = await respuesta.json();
 
-  mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
+
+  let respuesta;
+  let datosRespuesta;
+  
+  try {
+    respuesta = await fetch(url, optionsPATCH);
+    datosRespuesta = await respuesta.json();
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+  }
 
 }

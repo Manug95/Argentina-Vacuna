@@ -38,6 +38,9 @@ block contenido
                             td(class="ps-3 align-middle text-center") #{solicitud.fechaSolicitud}
                             td(class="ps-3 d-flex justify-content-center") 
                                 a(class="btn btn-primary p-1", href="/lotes/comprar?vacunaSolicitada="+solicitud.TipoVacuna.id) Comprar
+                    else 
+                        tr 
+                            td(class="align-middle text-center", colspan="4") #{error ? "HUBO UN PROBLEMA AL RECUPERAR LA SOLICITUDES" : "NO HAY SOLICITUDES PENDIENTES"}
 
         nav
             ul(class="pagination justify-content-center")

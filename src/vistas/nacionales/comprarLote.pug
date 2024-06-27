@@ -19,6 +19,8 @@ block contenido
                             option(value="", selected=!vacunaSolicitada, disabled) Seleccionar vacuna 
                             each vacuna in vacunas
                                 option(value=vacuna.id, selected=vacunaSolicitada) #{vacuna.TipoVacuna.tipo} (#{vacuna.Laboratorio.nombre})
+                            else 
+                                option(value="", selected, disabled) error al obtener las vacunas 
                         .invalid-tooltip Este campo es requerido
                 .col-12.col-md-6.col-lg-4.mb-3.mb-md-0
                     .position-relative
@@ -39,6 +41,8 @@ block contenido
                             option(value="", selected, disabled) Seleccionar deposito 
                             each deposito in depositos
                                 option(value=deposito.id) #{deposito.nombre} 
+                            else 
+                                option(value="", selected, disabled) error al obtener los depositos 
                         .invalid-tooltip Este campo es requerido
             .row.mb-3.justify-content-center 
                 .col-2.d-flex.justify-content-center
