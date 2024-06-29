@@ -1,12 +1,17 @@
 import { getElementById, createElement, agregarClases, removerClases } from "./frontUtils.js";
+import EstadoPaginador from "./estadoPaginador.js";
+import { enviarGET } from "./httpRequests.js";
+
+const estadoPaginador = new EstadoPaginador();
 
 document.addEventListener("DOMContentLoaded", () => {
   getElementById("deposito-Prov").addEventListener("change", async (e) => {
     const id = e.target.value;
-    const datos = await enviarPeticion(id, 0, 10);
+    const datos = await enviarPeticion(id, 0, estadoPaginador.resultadosPorPagina);
     
     if (datos) {
       renderizarTabla(datos);
+      estadoPaginador.cantidadPaginadores = datos.paginadores;
       actualizarPaginador(datos);
     } else {
       crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
@@ -16,26 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const paginador = getElementById("paginador");
 
-  const flechitasFn = (dir) => {
+  const navegarPaginador = (dir) => {
     return async (e) => {
-      const paginadorActivo = [...paginador.getElementsByTagName("li")].filter(li => li.firstChild.classList.contains("active"))[0];
-      let pagina = +paginadorActivo.innerText;
+      if (e.target.classList.contains("disabled")) return;
 
       if (dir === "der") {
-        pagina++;
+        estadoPaginador.incrementarPagina();
       } else {
-        pagina--;
+        estadoPaginador.decrementarPagina();
       }
 
-      await enviarPeticionPaginador({pagina});
+      await enviarPeticionPaginador();
 
-      const cantidadPaginadores = paginador.childElementCount - 2;
-      actualizarPaginador({ paginadores: cantidadPaginadores }, pagina);
+      actualizarPaginador();
     };
   }
 
-  paginador.firstElementChild.addEventListener("click", flechitasFn("izq"));
-  paginador.lastElementChild.addEventListener("click", flechitasFn("der"));
+  paginador.firstElementChild.addEventListener("click", navegarPaginador("izq"));
+  paginador.lastElementChild.addEventListener("click", navegarPaginador("der"));
 });
 
 function renderizarTabla({ sublotes, depositoSeleccionado }) {
@@ -59,7 +62,7 @@ function renderizarTabla({ sublotes, depositoSeleccionado }) {
         createElement(
           "td", 
           { 
-            content: createElement("a", { content: "Descartar", href:"#" }, "btn", "btn-primary", "p-1")
+            content: createElement("a", { content: "Descartar", href:"#" }, "btn", "btn-primary")//, "p-1")
           }, 
           "ps-3", "align-middle", "text-center"
         ));
@@ -84,15 +87,15 @@ function crearFilaMensaje(mensaje, tabla = getElementById("cuerpo")) {
   actualizarPaginador();
 }
 
-function actualizarPaginador({ paginadores } = 1, paginaActual = 1 ) {
+function actualizarPaginador() {
   removerPaginadores();
   let i = 0;
 
-  while (i < paginadores) {
+  while (i < estadoPaginador.cantidadPaginadores) {
     const li = createElement("li", {}, "page-item");
     const span = createElement("span", { content: (i+1).toString() }, "page-link", "cursor-pointer");
 
-    if (i === paginaActual - 1) {
+    if (i === estadoPaginador.paginaActual - 1) {
       agregarClases(span, "active");
     } else {
       removerClases(span, "active");
@@ -100,42 +103,23 @@ function actualizarPaginador({ paginadores } = 1, paginaActual = 1 ) {
 
     li.appendChild(span);
 
-    li.addEventListener("click", enviarPeticionPaginador);
+    li.addEventListener("click", (() => {
+      let pagina = i+1;
+      return (e) => {
+        // estadoPaginador.paginaActual = pagina;
+        if (!e.target.classList.contains("active")) {
+          estadoPaginador.paginaActual = pagina;
+          enviarPeticionPaginador();
+        }
+      };
+    })());
 
     getElementById("flecha-pag-der").before(li);
 
     i++;
   }
 
-  actualizarFlechasPaginador(paginadores, paginaActual);
-}
-
-function actualizarFlechasPaginador(paginadores, paginaActual) {
-  if (paginadores === 1) {
-    agregarClases(getElementById("flecha-pag-der"), "disabled");
-    agregarClases(getElementById("flecha-pag-izq"), "disabled");
-    return;
-  }
-
-  if (paginaActual === 1) {
-    agregarClases(getElementById("flecha-pag-izq"), "disabled");
-    removerClases(getElementById("flecha-pag-der"), "disabled");
-    return;
-  }
-
-  if (paginaActual < paginadores) {
-    removerClases(getElementById("flecha-pag-izq"), "disabled");
-    removerClases(getElementById("flecha-pag-der"), "disabled");
-    return;
-  }
-
-  if (paginaActual === paginadores) {
-    removerClases(getElementById("flecha-pag-izq"), "disabled");
-    agregarClases(getElementById("flecha-pag-der"), "disabled");
-    return;
-  }
-
-  return;
+  estadoPaginador.actualizarFlechasPaginador();
 }
 
 function removerPaginadores() {
@@ -149,42 +133,17 @@ function removerPaginadores() {
   }
 }
 
-
-/**
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * @param {*} e 
- */
-async function enviarPeticionPaginador(e) {
+async function enviarPeticionPaginador() {
   const idDepositoSeleccionado = getElementById("deposito-Prov").value;
-  let pagina;
-  
-  if (e.target) {
-    if (e.target.nodeName === "SPAN") {
-      pagina = +e.target.innerText;
-    } else {
-      pagina = +e.target.firstChild.innerText;
-    }
-  } else {
-    pagina = e.pagina;
-  }
-  
-  const offset = (pagina - 1) * 10;
 
-  const datos = await enviarPeticion(idDepositoSeleccionado, offset, 10);
+  const offset = (estadoPaginador.paginaActual - 1) * estadoPaginador.resultadosPorPagina;
+
+  const datos = await enviarPeticion(idDepositoSeleccionado, offset, estadoPaginador.resultadosPorPagina);
   
   if (datos) {
     renderizarTabla(datos);
-    actualizarPaginador(datos, pagina);
+    // estadoPaginador.cantidadPaginadores = datos.paginadores;
+    actualizarPaginador(datos);
   } else {
     crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
     actualizarPaginador();
@@ -193,14 +152,7 @@ async function enviarPeticionPaginador(e) {
 
 async function enviarPeticion(id, offset, limit) {
   let url = `/listados/stock/provincia/${id}`;
-
   if (offset>=0 && limit) url += `?offset=${offset}&limit=${limit}`;
 
-  try {
-    const res = await fetch(url);
-    return await res.json();
-  } catch (e) {
-    console.log(e.message);
-    return null;
-  }
+  return await enviarGET(url);
 }

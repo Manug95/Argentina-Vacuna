@@ -1,5 +1,5 @@
 import { enviarPOST } from "./httpRequests.js";
-import { getElementById, getFormInputValue } from "./frontUtils.js";
+import { getElementById, getFormInputValue, mostrarMensaje } from "./frontUtils.js";
 import { setInvalidInputStyle, setValidInputStyle, validarFormSelect } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", (e) => {
@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
 });
 
 async function enviar(formValues) {
-  await enviarPOST("/lotes/nuevo", formValues);
+  const respuesta = await enviarPOST("/lotes/nuevo", formValues);
+  mostrarMensaje(respuesta.ok, respuesta.mensaje);
 }
 
 function getFormValues() {

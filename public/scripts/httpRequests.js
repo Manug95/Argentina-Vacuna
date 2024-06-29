@@ -1,4 +1,4 @@
-import { mostrarMensaje } from "./frontUtils.js";
+const optionsGET = {}
 
 const optionsPOST = {
   method: "POST",
@@ -30,23 +30,21 @@ const optionsPATCH = {
 /**
  * Realiza la peticion GET al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
+ * @param {Object} headers Un objeto con las cabeceras de la peticion
  */
-export async function enviarGET(url, options) {
+export async function enviarGET(url, headers) {
+  if (headers) optionsGET.headers = headers;
 
-  // const respuesta = await fetch(url);
-  // const datosRespuesta = await respuesta.json();
-  // return datosRespuesta;
-
-  let respuesta;
-  let datosRespuesta;
+  let datosRespuesta = null;
 
   try {
-    respuesta = await fetch(url, options);
-    datosRespuesta = await respuesta.json();
+    const respuesta = await fetch(url);
+    if (respuesta.ok) {
+      datosRespuesta = await respuesta.json();
+    }
   } catch (e) {
     console.log(e.message);
   } finally {
-    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
     return datosRespuesta;
   }
 
@@ -58,26 +56,24 @@ export async function enviarGET(url, options) {
  * Realiza la peticion POST al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
+ * @param {Object} headers Un objeto con las cabeceras de la peticion
  */
-export async function enviarPOST(url, datos, options) {
+export async function enviarPOST(url, datos, headers) {
 
   optionsPOST.body = JSON.stringify(datos);
 
-  // const respuesta = await fetch(url, optionsPOST);
-  // const datosRespuesta = await respuesta.json();
+  if (headers) Object.assign(optionsPOST.headers, headers);
 
-  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
-
-  let respuesta;
   let datosRespuesta;
 
   try {
-    respuesta = await fetch(url, optionsPOST);
+    const respuesta = await fetch(url, optionsPOST);
     datosRespuesta = await respuesta.json();
   } catch (e) {
     console.log(e.message);
+    datosRespuesta = { ok: false, mensaje: "Error al hacer la peticion" };
   } finally {
-    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+    return datosRespuesta;
   }
 
 }
@@ -87,24 +83,22 @@ export async function enviarPOST(url, datos, options) {
 /**
  * Realiza la peticion DELETE al servidor
  * @param {String} url La url, con la id del registro a borrar, a donde se enviara la peticion
+ * @param {Object} headers Un objeto con las cabeceras de la peticion
  */
-export async function enviarDELETE(url, options) {
+export async function enviarDELETE(url, headers) {
 
-  // const respuesta = await fetch(url, optionsDELETE);
-  // const datosRespuesta = await respuesta.json();
+  if (headers) optionsDELETE.headers = headers;
 
-  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
-
-  let respuesta;
   let datosRespuesta;
 
   try {
-    respuesta = await fetch(url, optionsDELETE);
+    const respuesta = await fetch(url, optionsDELETE);
     datosRespuesta = await respuesta.json();
   } catch (e) {
     console.log(e.message);
+    datosRespuesta = { ok: false, mensaje: "Error al hacer la peticion" };
   } finally {
-    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+    return datosRespuesta;
   }
 
 }
@@ -115,26 +109,24 @@ export async function enviarDELETE(url, options) {
  * Realiza la peticion PUT al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
+ * @param {Object} headers Un objeto con las cabeceras de la peticion
  */
-export async function enviarPUT(url, datos, options) {
+export async function enviarPUT(url, datos, headers) {
 
   optionsPUT.body = JSON.stringify(datos);
 
-  // const respuesta = await fetch(url, optionsPUT);
-  // const datosRespuesta = await respuesta.json();
+  if (headers) Object.assign(optionsPUT.headers, headers);
 
-  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
-
-  let respuesta;
   let datosRespuesta;
   
   try {
-    respuesta = await fetch(url, optionsPUT);
+    const respuesta = await fetch(url, optionsPUT);
     datosRespuesta = await respuesta.json();
   } catch (e) {
     console.log(e.message);
+    datosRespuesta = { ok: false, mensaje: "Error al hacer la peticion" };
   } finally {
-    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+    return datosRespuesta;
   }
 
 }
@@ -145,26 +137,24 @@ export async function enviarPUT(url, datos, options) {
  * Realiza la peticion PATCH al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
+ * @param {Object} headers Un objeto con las cabeceras de la peticion
  */
-export async function enviarPATCH(url, datos, options) {
+export async function enviarPATCH(url, datos, headers) {
 
   optionsPATCH.body = JSON.stringify(datos);
 
-  // const respuesta = await fetch(url, optionsPATCH);
-  // const datosRespuesta = await respuesta.json();
+  if (headers) Object.assign(optionsPATCH.headers, headers);
 
-  // mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje);
-
-  let respuesta;
   let datosRespuesta;
   
   try {
-    respuesta = await fetch(url, optionsPATCH);
+    const respuesta = await fetch(url, optionsPATCH);
     datosRespuesta = await respuesta.json();
   } catch (e) {
     console.log(e.message);
+    datosRespuesta = { ok: false, mensaje: "Error al hacer la peticion" };
   } finally {
-    mostrarMensaje(datosRespuesta.ok, datosRespuesta.mensaje ?? "Error al enviar la petición al servidor");
+    return datosRespuesta;
   }
 
 }
