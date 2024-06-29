@@ -1,0 +1,55 @@
+extends ../index.pug
+
+block estilos
+    link(rel="stylesheet", href="/estilos/styles.css")
+
+block scripts 
+    script(src="/scripts/listadoSubLotes.js", type="module", defer) 
+
+block contenido
+    h1#titulo(class="text-center") Listado de Sub lotes
+    .container.shadow-sm.border.rounded-4.mt-5.bg-primary-subtle 
+
+        select#deposito-Prov(name="deposito", class="form-select cursor-pointer my-2")
+            option(value="", selected, disabled) Selecciono deposito provincial 
+            each deposito in depositosProv 
+                option(value=deposito.id) #{deposito.nombre}  
+
+        .table-responsive.my-4.rounded-3
+            table(class="table table-striped table-hover mb-0")
+                thead(class="table-light")
+                    tr 
+                        th(class="text-center")
+                            span#tipo(class="cursor-pointer ordenable") 
+                                span 
+                                    i#flecha-tipo(class="me-2 bi")
+                                span Vacuna
+                        th(class="text-center")
+                            span#cantidad(class="cursor-pointer ordenable") 
+                                span 
+                                    i#flecha-cantidad(class="me-2 bi")
+                                span Cantidad
+                        th(class="text-center")
+                            span#fecha(class="cursor-pointer ordenable") 
+                                span 
+                                    i#flecha-fecha(class="me-2 bi")
+                                span F.Vencimiento
+                        th(class="text-center") Nombre Comercial
+                        th(class="text-center") Laboratorio
+                        th(class="text-center") Acción
+                tbody#cuerpo 
+                    tr 
+                        td(class="align-middle text-center", colspan="6") SELECCIONE UN DEPOSITO PROVINCIAL
+
+        nav
+            ul#paginador(class="pagination justify-content-center")
+                li#flecha-pag-izq(class="page-item", class=paginadores===1 ? "disabled" : "")
+                    a(class="page-link", href="#")
+                        span &laquo;
+                -var i = 0;
+                while i < paginadores
+                    li(class="page-item")
+                        a(class="page-link", href="#", class=i===0 ? "active" : "")= ++i
+                li#flecha-pag-der(class="page-item", class=paginadores===1 ? "disabled" : "")
+                    a(class="page-link", href="#")
+                        span &raquo;

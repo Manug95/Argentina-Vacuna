@@ -25,3 +25,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.active-link {
+    background-color: #0d6efd !important;
+    color: black !important;
+}

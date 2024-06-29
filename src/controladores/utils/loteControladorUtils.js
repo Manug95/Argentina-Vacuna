@@ -6,7 +6,9 @@ import {
   SolicitudCompra,
   TipoVacuna,
   Lote,
-  Vacuna 
+  Vacuna,
+  Laboratorio,
+  DepositoProvincial 
 } from "../../modelos/relaciones.js";
 import { 
   GuardarSolicitudError,
@@ -196,5 +198,71 @@ export const actualizarCantidadVacunasDeLote = async (lote, body, transaction) =
   } catch (e) {
     console.error(e);
     throw new Error("Error al actualizar la cantidad de vacunas del lote");
+  }
+};
+
+// FUNCIONES DEL METODO listarSubLotesEnDepositoProv
+export const traerSublotesDeUnDepositoProv = async (deposito_id, { offset, limit }) => {
+  try {
+    const opciones = {
+      where: {
+        deposito: deposito_id
+      },
+      include: [
+        {
+          model: SubLote,
+          required: true,
+          where: {
+            cantidad: {
+              [Op.gt]: 0
+            }
+          },
+          include: [
+            {
+              model: Lote,
+              attributes: { exclude: ["cantidad", "fechaFabricacion", "fechaCompra"] },
+              required: true,
+              include: [
+                {
+                  model: Vacuna,
+                  required: true,
+                  include: [
+                    {
+                      model: TipoVacuna,
+                      required: true
+                    },
+                    {
+                      model: Laboratorio,
+                      attributes: { exclude: ["pais_id"] },
+                      required: true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    if (offset) opciones.offset = +offset;
+    if (limit) opciones.limit = +limit;
+
+    const { rows, count } = await DistribucionNacional.findAndCountAll(opciones);
+
+    const sublotes = rows.map(s => {
+      return {
+        tipoVacuna: s.SubLote.Lote.Vacuna.TipoVacuna.tipo,
+        cantidad: s.SubLote.cantidad,
+        vencimiento: s.SubLote.Lote.vencimiento.toISOString().split("T")[0].split("-").reverse().join("-"),
+        nombreComercial: s.SubLote.Lote.Vacuna.nombreComercial,
+        laboratorio: s.SubLote.Lote.Vacuna.Laboratorio.nombre,
+      };
+    });
+  
+    return { sublotes, cantidadSublotes: count };
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error al traer el stock de sublotes");
   }
 };

@@ -2,7 +2,8 @@ import express from "express";
 import pug from "pug";
 // const path = require('path');
 
-import { loteRouter } from "./rutas/lote.router.js";
+import loteRouter from "./rutas/lote.router.js";
+import listadosRouter from "./rutas/listados.router.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use("/lotes", loteRouter);
+app.use("/listados", listadosRouter);
 
 
 // app.get("*", (req, res) => {

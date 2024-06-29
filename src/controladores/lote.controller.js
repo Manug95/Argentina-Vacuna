@@ -294,5 +294,57 @@ export class LoteController {
 
     return;
   }
+
+  static async VistaListadoSubLotesEnDepositoProv(req, res) {
+    const respuesta = { error: false };
+
+    try {
+      respuesta.depositosProv = await DepositoProvincial.findAll();
+    }
+    catch (error) {
+      respuesta.error = true;
+      console.log(error.message);
+    }
+    finally {
+      res.send(pug.renderFile("src/vistas/provinciales/listadoSubLotes.pug", {
+        pretty: true,
+        activeLink: "listado-sublotes",
+        depositosProv: respuesta.depositosProv,
+        paginadores: 1,
+        error: respuesta.error
+      }));
+    }
+
+    return;
+  }
+
+  static async listadoSubLotesEnDepositoProv(req, res) {
+    const { deposito_id } = req.params;
+
+    let status = 200;
+    const respuesta = {};
+
+    try {
+      const [ sublotesDelDepositoSeleccionado, depositoSeleccionado ] = await Promise.all([
+        loteControladorUtils.traerSublotesDeUnDepositoProv(deposito_id, req.query),
+        DepositoProvincial.findByPk(deposito_id)
+      ]);
+
+      respuesta.depositoSeleccionado = depositoSeleccionado.nombre;
+      respuesta.sublotes = sublotesDelDepositoSeleccionado.sublotes;
+      respuesta.paginadores = Math.floor(sublotesDelDepositoSeleccionado.cantidadSublotes / 10 + 1) ?? 1;
+      
+    }
+    catch (error) {
+      respuesta.error = true;
+      status = 400;
+      console.log(error.message);
+    }
+    finally {
+      res.status(status).json(respuesta);
+    }
+
+    return;
+  }
   
 }

@@ -31,7 +31,7 @@ const optionsPATCH = {
  * Realiza la peticion GET al servidor
  * @param {String} url La url a donde se enviaran los datos de la peticion
  */
-export async function enviarGET(url) {
+export async function enviarGET(url, options) {
 
   // const respuesta = await fetch(url);
   // const datosRespuesta = await respuesta.json();
@@ -41,7 +41,7 @@ export async function enviarGET(url) {
   let datosRespuesta;
 
   try {
-    respuesta = await fetch(url);
+    respuesta = await fetch(url, options);
     datosRespuesta = await respuesta.json();
   } catch (e) {
     console.log(e.message);
@@ -59,7 +59,7 @@ export async function enviarGET(url) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-export async function enviarPOST(url, datos) {
+export async function enviarPOST(url, datos, options) {
 
   optionsPOST.body = JSON.stringify(datos);
 
@@ -88,7 +88,7 @@ export async function enviarPOST(url, datos) {
  * Realiza la peticion DELETE al servidor
  * @param {String} url La url, con la id del registro a borrar, a donde se enviara la peticion
  */
-export async function enviarDELETE(url) {
+export async function enviarDELETE(url, options) {
 
   // const respuesta = await fetch(url, optionsDELETE);
   // const datosRespuesta = await respuesta.json();
@@ -116,7 +116,7 @@ export async function enviarDELETE(url) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-export async function enviarPUT(url, datos) {
+export async function enviarPUT(url, datos, options) {
 
   optionsPUT.body = JSON.stringify(datos);
 
@@ -146,7 +146,7 @@ export async function enviarPUT(url, datos) {
  * @param {String} url La url a donde se enviaran los datos de la peticion
  * @param {Object} datos Objeto con los datos a enviar en la peticion
  */
-export async function enviarPATCH(url, datos) {
+export async function enviarPATCH(url, datos, options) {
 
   optionsPATCH.body = JSON.stringify(datos);
 

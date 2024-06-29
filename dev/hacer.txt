@@ -11,3 +11,7 @@ LISTAR SOLICITUDES E COMPRA DE VACUNAS
 personalizar el mensaje se error al solicitar vacunas.
 
 en los formularios de compra/solicitudes, que venga seleccionado el deposito/centro en que trabaja el usuario
+
+refactorear los metodos enviar de httpREquest.js para que no sean ellos los que abren el modal mensaje.
+
+crear un servicio que guarde un estado para las operaciones comunes.
