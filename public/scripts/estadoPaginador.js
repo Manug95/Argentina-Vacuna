@@ -71,5 +71,3 @@ export default class EstadoPaginador {
     this.#resultadosPorPagina = resultadosPorPagina;
   }
 }
-
-// export default EstadoPaginador;

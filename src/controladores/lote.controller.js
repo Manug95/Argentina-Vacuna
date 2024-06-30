@@ -306,12 +306,37 @@ export class LoteController {
       console.log(error.message);
     }
     finally {
-      res.send(pug.renderFile("src/vistas/provinciales/listadoSubLotes.pug", {
+      res.send(pug.renderFile("src/vistas/listadodeStock.pug", {
         pretty: true,
         activeLink: "listado-sublotes",
         depositosProv: respuesta.depositosProv,
         paginadores: 1,
-        error: respuesta.error
+        error: respuesta.error,
+        nacional: false
+      }));
+    }
+
+    return;
+  }
+
+  static async VistaListadoLotesEnDepositoNac(req, res) {
+    const respuesta = { error: false };
+
+    try {
+      respuesta.depositosNac = await DepositoNacional.findAll();
+    }
+    catch (error) {
+      respuesta.error = true;
+      console.log(error.message);
+    }
+    finally {
+      res.send(pug.renderFile("src/vistas/listadodeStock.pug", {
+        pretty: true,
+        activeLink: "listado-sublotes",
+        depositosNac: respuesta.depositosNac,
+        paginadores: 1,
+        error: respuesta.error,
+        nacional: true
       }));
     }
 
@@ -333,6 +358,35 @@ export class LoteController {
       respuesta.depositoSeleccionado = depositoSeleccionado.nombre;
       respuesta.sublotes = sublotesDelDepositoSeleccionado.sublotes;
       respuesta.paginadores = Math.floor(sublotesDelDepositoSeleccionado.cantidadSublotes / 10 + 1) ?? 1;
+      
+    }
+    catch (error) {
+      respuesta.error = true;
+      status = 400;
+      console.log(error.message);
+    }
+    finally {
+      res.status(status).json(respuesta);
+    }
+
+    return;
+  }
+
+  static async listadoLotesEnDepositoNac(req, res) {
+    const { deposito_id } = req.params;
+
+    let status = 200;
+    const respuesta = {};
+
+    try {
+      const [ lotesDelDepositoSeleccionado, depositoSeleccionado ] = await Promise.all([
+        loteControladorUtils.traerlotesDeUnDepositoNac(deposito_id, req.query),
+        DepositoNacional.findByPk(deposito_id)
+      ]);
+
+      respuesta.depositoSeleccionado = depositoSeleccionado.nombre;
+      respuesta.lotes = lotesDelDepositoSeleccionado.lotes;
+      respuesta.paginadores = Math.floor(lotesDelDepositoSeleccionado.cantidadLotes / 10 + 1) ?? 1;
       
     }
     catch (error) {

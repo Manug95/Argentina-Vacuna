@@ -8,7 +8,8 @@ import {
   Lote,
   Vacuna,
   Laboratorio,
-  DepositoProvincial 
+  DepositoProvincial, 
+  Almacena
 } from "../../modelos/relaciones.js";
 import { 
   GuardarSolicitudError,
@@ -264,5 +265,59 @@ export const traerSublotesDeUnDepositoProv = async (deposito_id, { offset, limit
   } catch (e) {
     console.error(e);
     throw new Error("Error al traer el stock de sublotes");
+  }
+};
+
+export const traerlotesDeUnDepositoNac = async (deposito_id, { offset, limit }) => {
+  try {
+    const opciones = {
+      where: {
+        deposito: deposito_id
+      },
+      include: [
+        {
+          model: Lote,
+          attributes: { exclude: ["fechaFabricacion", "fechaCompra"] },
+          required: true,
+          include: [
+            {
+              model: Vacuna,
+              required: true,
+              include: [
+                {
+                  model: TipoVacuna,
+                  required: true
+                },
+                {
+                  model: Laboratorio,
+                  attributes: { exclude: ["pais_id"] },
+                  required: true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    if (offset) opciones.offset = +offset;
+    if (limit) opciones.limit = +limit;
+
+    const { rows, count } = await Almacena.findAndCountAll(opciones);
+
+    const lotes = rows.map(l => {
+      return {
+        tipoVacuna: l.Lote.Vacuna.TipoVacuna.tipo,
+        cantidad: l.Lote.cantidad,
+        vencimiento: l.Lote.vencimiento.toISOString().split("T")[0].split("-").reverse().join("-"),
+        nombreComercial: l.Lote.Vacuna.nombreComercial,
+        laboratorio: l.Lote.Vacuna.Laboratorio.nombre,
+      };
+    });
+  
+    return { lotes, cantidadLotes: count };
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error al traer el stock de lotes");
   }
 };

@@ -1,0 +1,4 @@
+select#deposito-Prov(name="deposito", class="form-select cursor-pointer my-3")
+    option(value="", selected, disabled) Selecciono deposito provincial 
+    each deposito in depositosProv 
+        option(value=deposito.id) #{deposito.nombre} 

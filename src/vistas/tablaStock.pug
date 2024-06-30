@@ -1,0 +1,25 @@
+.table-responsive.my-4.rounded-3.fixed-height-table-container          
+    table.table.table-striped.table-hover.mb-0
+        thead.table-light
+            tr 
+                th.text-center
+                    span#tipo.cursor-pointer.ordenable 
+                    span 
+                        i#flecha-tipo.me-2.bi
+                    span Vacuna
+                th.text-center
+                    span#cantidad.cursor-pointer.ordenable 
+                    span 
+                        i#flecha-cantidad.me-2.bi
+                    span Cantidad
+                th.text-center
+                    span#fecha.cursor-pointer.ordenable 
+                    span 
+                        i#flecha-fecha.me-2.bi
+                    span F.Vencimiento
+                th.text-center Nombre Comercial
+                th.text-center Laboratorio
+                th.text-center Acción
+        tbody#cuerpo 
+            tr 
+                td.align-middle.text-center(colspan="6") SELECCIONE UN DEPOSITO #{nacional ? "NACIONAL" : "PROVINCIAL"}

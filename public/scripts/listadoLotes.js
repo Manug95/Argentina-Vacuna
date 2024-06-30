@@ -5,14 +5,14 @@ import { enviarGET } from "./httpRequests.js";
 const estadoPaginador = new EstadoPaginador();
 
 document.addEventListener("DOMContentLoaded", () => {
-  getElementById("deposito-Prov").addEventListener("change", async (e) => {
+  getElementById("deposito-nac").addEventListener("change", async (e) => {
     const id = e.target.value;
     const datos = await enviarPeticion(id, 0, estadoPaginador.resultadosPorPagina);
     
     if (datos) {
       renderizarTabla(datos);
       estadoPaginador.cantidadPaginadores = datos.paginadores;
-      actualizarPaginador(datos);
+      actualizarPaginador();
     } else {
       crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
       actualizarPaginador();
@@ -41,23 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
   paginador.lastElementChild.addEventListener("click", navegarPaginador("der"));
 });
 
-function renderizarTabla({ sublotes, depositoSeleccionado }) {
+function renderizarTabla({ lotes, depositoSeleccionado }) {
   getElementById("titulo").textContent = "Stock disponible en " + depositoSeleccionado;
   const tabla = getElementById("cuerpo");
   tabla.innerHTML = "";
 
-  if (sublotes.length > 0) {
-    sublotes.forEach(sl => {
+  if (lotes.length > 0) {
+    lotes.forEach(sl => {
       const fila = createElement("tr", {});
 
       Object.keys(sl).forEach(key => {
         fila.appendChild(createElement("td", { content: sl[key].toString() }, "align-middle", "text-center"));
       });
-      // fila.appendChild(createElement("td", { content: sl.tipoVacuna }, "ps-3", "align-middle", "text-center"));
-      // fila.appendChild(createElement("td", { content: sl.cantidad.toString() }, "ps-3", "align-middle", "text-center"));
-      // fila.appendChild(createElement("td", { content: sl.vencimiento }, "ps-3", "align-middle", "text-center"));
-      // fila.appendChild(createElement("td", { content: sl.nombreComercial }, "ps-3", "align-middle", "text-center"));
-      // fila.appendChild(createElement("td", { content: sl.laboratorio }, "ps-3", "align-middle", "text-center"));
+
       fila.appendChild(
         createElement(
           "td", 
@@ -103,7 +99,6 @@ function actualizarPaginador() {
     li.addEventListener("click", (() => {
       let pagina = i+1;
       return (e) => {
-        // estadoPaginador.paginaActual = pagina;
         if (!e.target.classList.contains("active")) {
           estadoPaginador.paginaActual = pagina;
           enviarPeticionPaginador();
@@ -131,7 +126,7 @@ function removerPaginadores() {
 }
 
 async function enviarPeticionPaginador() {
-  const idDepositoSeleccionado = getElementById("deposito-Prov").value;
+  const idDepositoSeleccionado = getElementById("deposito-nac").value;
 
   const offset = (estadoPaginador.paginaActual - 1) * estadoPaginador.resultadosPorPagina;
 
@@ -139,8 +134,7 @@ async function enviarPeticionPaginador() {
   
   if (datos) {
     renderizarTabla(datos);
-    // estadoPaginador.cantidadPaginadores = datos.paginadores;
-    actualizarPaginador(datos);
+    actualizarPaginador();
   } else {
     crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
     actualizarPaginador();
@@ -148,7 +142,7 @@ async function enviarPeticionPaginador() {
 }
 
 async function enviarPeticion(id, offset, limit) {
-  let url = `/listados/stock/provincia/${id}`;
+  let url = `/listados/stock/nacion/${id}`;
   if (offset>=0 && limit) url += `?offset=${offset}&limit=${limit}`;
 
   return await enviarGET(url);

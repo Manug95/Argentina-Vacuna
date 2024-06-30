@@ -1,0 +1,23 @@
+extends ./index.pug
+
+block estilos
+    link(rel="stylesheet", href="/estilos/tablas.css")
+
+block scripts 
+    if (nacional)
+        script(src="/scripts/listadoLotes.js", type="module", defer) 
+    else 
+        script(src="/scripts/listadoSubLotes.js", type="module", defer) 
+
+block contenido
+    h1#titulo(class="text-center") Listado del stock disponible
+    .container.shadow-sm.border.rounded-4.mt-5.bg-primary-subtle 
+
+        if (nacional)
+            include ./nacionales/selectDepositoNac.pug
+        else 
+            include ./provinciales/selectDepositoProv.pug
+
+        include ./tablaStock.pug
+
+        include ./paginador.pug
