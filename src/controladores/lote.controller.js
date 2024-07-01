@@ -1,18 +1,15 @@
-import { Op } from "sequelize";
 import { sequelize } from "../config/sequelize.js";
 import pug from "pug";
 import { faker } from '@faker-js/faker';
 import { randomUUID } from "node:crypto";
 import { 
-  Lote, 
-  TipoVacuna, 
-  Laboratorio, 
+  Lote,
   DepositoNacional, 
-  Almacena, 
-  Vacuna, 
+  Almacena,
   DepositoProvincial
 } from "../modelos/relaciones.js";
-import * as loteControladorUtils from "./utils/loteControladorUtils.js";
+import loteServicio from "../servicios/loteServicio.js";
+import consultasEstaticas from "../servicios/consultasEstaticas.js";
 import { StockNacionalError } from "../modelos/Errores/stockErrors.js";
 import { resolverError, isSotckNacionalError } from "../modelos/Errores/resolverErrores.js";
 
@@ -73,20 +70,20 @@ export class LoteController {
     try {
       const body = req.body;
 
-      const lote = await loteControladorUtils.traerLotesDeLasVacunasRequeridas(body);
+      const lote = await loteServicio.traerLotesDeLasVacunasRequeridas(body);
       
       if (!lote) {
-        await loteControladorUtils.guardarSolicitudDeVacuna(body);
+        await loteServicio.guardarSolicitudDeVacuna(body);
         throw new StockNacionalError("No hay stock de la vacuna solicita. Se ha agregado a la lista de compras pendientes");
       }
 
-      const nuevoSubLote = await loteControladorUtils.crearNuevoSubLote(lote, body, t);
+      const nuevoSubLote = await loteServicio.crearNuevoSubLote(lote, body, t);
 
       // guardo la relacion del nuevo sublote con el deposito provincial al que se envia
-      await loteControladorUtils.crearDistribucionNacional(nuevoSubLote, body, t);
+      await loteServicio.crearDistribucionNacional(nuevoSubLote, body, t);
 
       // actualizo la cantidad de vacunas del lote al que se le hizo el sublote
-      await loteControladorUtils.actualizarCantidadVacunasDeLote(lote, body, t);
+      await loteServicio.actualizarCantidadVacunasDeLote(lote, body, t);
 
       respuesta.ok = true;
       respuesta.mensaje = "Vacunas enviadas";
@@ -112,111 +109,14 @@ export class LoteController {
     return;
   }
 
-  static async depositosConStock(req, res) {
-    const vacuna = req.params.vacuna;
-    const cantidad = req.query.cantidad;
-    let status = 201;
-    const respuesta = {};
-    let depositos;
-
-    try {
-      depositos = (await Almacena.findAll({
-        attributes: ["deposito"],
-        group: "nombre",
-        order: [[DepositoNacional, 'nombre', 'ASC']],
-        include: [
-          {
-            model: Lote,
-            attributes: ["nroLote", "vacuna_id"],
-            where: {
-              [Op.and]: [
-                {
-                  vacuna_id: {
-                    [Op.not]: null
-                  }
-                },
-                {
-                  cantidad: {
-                    [Op.gte]: cantidad
-                  }
-                }
-              ]
-            },
-            include: [
-              {
-                model: Vacuna,
-                attributes: ["id", "tipoVacuna_id"],
-                where: {
-                  TipoVacuna_id: {
-                    [Op.not]: null
-                  }
-                },
-                include: [
-                  {
-                    model: TipoVacuna,
-                    where: {
-                      id: vacuna
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          DepositoNacional
-        ]
-      }))
-      .map(d => d.toJSON().DepositoNacional);
-
-      console.log(depositos);
-
-      respuesta.ok = true;
-      respuesta.body = depositos;
-      // respuesta.body = [{id: "1", nombre: "Deposito Nacional A"}];
-    } catch (e) {
-      status = 404;
-      respuesta.ok = false;
-      respuesta.mensaje = "no se encontraron resultados";
-      console.error(e);
-    } finally {
-      res.status(status).json(respuesta);
-    }
-
-    return;
-  }
-
-  static async vistaRegistro (req, res){
-    let tiposVacuanas;
-    let laboratorios;
-    let depositos;
-
-    try {
-      tiposVacuanas = await TipoVacuna.findAll();
-      depositos = await DepositoNacional.findAll();
-      laboratorios = await Laboratorio.findAll();
-    } catch(e) {
-      console.error(e);
-    }
-
-    res.send(pug.renderFile("src/vistas/formularios/registrarLote.pug", {
-      pretty: true,
-      tiposVacuanas,
-      depositos,
-      laboratorios
-    }));
-
-    return;
-  }
-
   static async vistaComprarLote (req, res) {
     const resultadosConsultas = {};
     const { vacunaSolicitada } = req.query;
 
     try {
       const [ depositosNac, vacunas ] = await Promise.all([
-        DepositoNacional.findAll(),
-        Vacuna.findAll({
-          include: [TipoVacuna, { model: Laboratorio, attributes: ["id", "nombre"] }]
-        })
+        consultasEstaticas.getDepositosNacionales(),
+        consultasEstaticas.getVacunas()
       ]);
 
       resultadosConsultas.depositosNac = depositosNac;
@@ -242,14 +142,8 @@ export class LoteController {
 
     try {
       const [ depositosProv, vacunas ] = await Promise.all([
-        DepositoProvincial.findAll(),
-        Vacuna.findAll({
-          group: "tipo",
-          order: [[TipoVacuna, 'tipo', 'ASC']],
-          include: [
-            TipoVacuna
-          ]
-        })
+        consultasEstaticas.getDepositosProvinciales(),
+        consultasEstaticas.getTiposVacunas()
       ]);
 
       resultadosConsultas.depositosProv = depositosProv;
@@ -277,7 +171,7 @@ export class LoteController {
     };
 
     try {
-      Object.assign(resultadosConsultas, await loteControladorUtils.findAndCountAllSolicitudCompra(req.query));
+      Object.assign(resultadosConsultas, await loteServicio.findAndCountAllSolicitudCompra(req.query));
     }
     catch (error) {
       resultadosConsultas.error = true;
@@ -299,7 +193,7 @@ export class LoteController {
     const respuesta = { error: false };
 
     try {
-      respuesta.depositosProv = await DepositoProvincial.findAll();
+      respuesta.depositosProv = await consultasEstaticas.getDepositosProvinciales();
     }
     catch (error) {
       respuesta.error = true;
@@ -323,7 +217,7 @@ export class LoteController {
     const respuesta = { error: false };
 
     try {
-      respuesta.depositosNac = await DepositoNacional.findAll();
+      respuesta.depositosNac = await consultasEstaticas.getDepositosNacionales();
     }
     catch (error) {
       respuesta.error = true;
@@ -351,7 +245,7 @@ export class LoteController {
 
     try {
       const [ sublotesDelDepositoSeleccionado, depositoSeleccionado ] = await Promise.all([
-        loteControladorUtils.traerSublotesDeUnDepositoProv(deposito_id, req.query),
+        loteServicio.traerSublotesDeUnDepositoProv(deposito_id, req.query),
         DepositoProvincial.findByPk(deposito_id)
       ]);
 
@@ -380,7 +274,7 @@ export class LoteController {
 
     try {
       const [ lotesDelDepositoSeleccionado, depositoSeleccionado ] = await Promise.all([
-        loteControladorUtils.traerlotesDeUnDepositoNac(deposito_id, req.query),
+        loteServicio.traerlotesDeUnDepositoNac(deposito_id, req.query),
         DepositoNacional.findByPk(deposito_id)
       ]);
 

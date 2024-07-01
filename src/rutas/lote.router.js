@@ -10,8 +10,6 @@ loteRouter.use("/solicitar", solicitarRouter);
 
 loteRouter.get("/comprar", LoteController.vistaComprarLote);
 
-// loteRouter.get("/registrar", LoteController.vistaRegistro);
-
 loteRouter.post("/nuevo", LoteController.crear);
 
 
