@@ -15,3 +15,5 @@ en los formularios de compra/solicitudes, que venga seleccionado el deposito/cen
 refactorear los metodos enviar de httpREquest.js para que no sean ellos los que abren el modal mensaje.
 
 crear un servicio que guarde un estado para las operaciones comunes.
+
+refactorizar listadoLote.js y listadoSubLote.js porque hacen casi lo mismo

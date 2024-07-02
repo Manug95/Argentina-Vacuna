@@ -1,3 +1,2 @@
 node_modules
-src/vistas/formularios/registrarLote.pug
-public/scripts/paginacion.js
+public/scripts/pruebas.js
