@@ -1,7 +1,6 @@
 import { sequelize } from "../src/config/sequelize.js";
 import { Op } from "sequelize";
 import * as modelos from "../src/modelos/relaciones.js";
-import pc from "picocolors"
 
 export async function llenado() {
   // sequelize.sync()
@@ -17,7 +16,7 @@ export async function llenado() {
   //   await llenarCentrosVacunacion();
   //   await llenarAlmacen();
   // })
-  // .catch(err => console.error(pc.red(err)));
+  // .catch(err => console.error(err));
   try {
     // await llenarPaises();
 
@@ -35,7 +34,7 @@ export async function llenado() {
     // await llenarAlmacen();
     // await llenarDistribucionNacional();
   } catch (err) {
-    console.error(pc.red(err));
+    console.error(err);
   }
 }
 

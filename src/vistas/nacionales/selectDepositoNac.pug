@@ -1,4 +1,5 @@
-select#deposito-nac(name="deposito", class="form-select cursor-pointer my-3")
-    option(value="", selected, disabled) Selecciono deposito nacional 
+label.form-label.fw-bold(for="deposito-nac") Seleccionar deposito nacional
+select#deposito-nac(name="deposito", class="form-select cursor-pointer")
+    option(value="", selected, disabled) Seleccionar
     each deposito in depositosNac 
         option(value=deposito.id) #{deposito.nombre} 

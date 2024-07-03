@@ -1,5 +1,3 @@
-import pc from "picocolors";
-
 // import { DepNac_DepProv_Lote } from "../src/modelos/DepNac_DepProv_Lote.js";
 // import { DepProv_Lote } from "../src/modelos/DepProv_Lote.js";
 // import { DepProv_CenVac_Lote } from "../src/modelos/DepProv_CenVac_Lote.js";
@@ -74,8 +72,8 @@ export async function pruebaSync() {  //primero sincronizo los modelos y despues
   // await Redistribucion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   // await Aplicacion.sync({alter:true});  //Esta clase esta hecha con el atributo references en lugar de las relaciones
   } catch(err) {
-    console.error(pc.red(err.parent.sqlMessage));
-    console.log(pc.green(err.parent.sql));
-    // console.error(pc.red(err));
+    console.error(err.parent.sqlMessage);
+    console.log(err.parent.sql);
+    // console.error(err);
   }
 }

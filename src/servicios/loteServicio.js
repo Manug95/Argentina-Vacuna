@@ -1,8 +1,5 @@
-import { randomUUID } from "node:crypto";
 import { Op } from "sequelize";
 import {
-  SubLote, 
-  DistribucionNacional, 
   SolicitudCompra,
   TipoVacuna,
   Lote,
@@ -10,10 +7,7 @@ import {
   Laboratorio,
   Almacena
 } from "../modelos/relaciones.js";
-import { 
-  GuardarSolicitudError,
-  CrearSubLoteError
-} from "../modelos/Errores/stockErrors.js";
+import { GuardarSolicitudError } from "../modelos/Errores/stockErrors.js";
 import Utils from "./Utils.js";
 
 let instanciaServicio;
@@ -28,7 +22,7 @@ class LoteServicio {
 
   async findAndCountAllSolicitudCompra(queryParams) {
     try {
-      const { count, rows } = (await SolicitudCompra.findAndCountAll(this.#crearOpcionesDeListado(queryParams)));
+      const { count, rows } = await SolicitudCompra.findAndCountAll(this.#crearOpcionesDeListado(queryParams));
   
       const solicitudes = rows
       .map(s => s.toJSON())
@@ -99,45 +93,6 @@ class LoteServicio {
     }
   }
 
-  async crearNuevoSubLote({ nroLote }, { cantidad }, transaction) {
-    try {
-      const id = randomUUID();
-      
-      const nuevoSubLote = await SubLote.create({
-        id,
-        lote: nroLote,
-        cantidad: cantidad
-      },
-      {
-        transaction: transaction
-      });
-  
-      return nuevoSubLote;
-    } catch (e) {
-      console.error(e);
-      throw new CrearSubLoteError("Error al crear el sub lote");
-    }
-  }
-
-  async crearDistribucionNacional({ id }, { depositoProv }, transaction) {
-    try {
-      const subLoteDistribuido = await DistribucionNacional.create({
-        deposito: depositoProv,
-        sublote: id,
-        fechaSalida: new Date(),
-        fechaLlegada: new Date()
-      },
-      {
-        transaction: transaction
-      });
-    
-      // return subLoteDistribuido;
-    } catch (e) {
-      console.error(e);
-      throw new Error("Error al crear la relacion en Distribucion Nacional");
-    }
-  }
-
   async actualizarCantidadVacunasDeLote(lote, body, transaction) {
     try {
       const loteModificado = await Lote.update(
@@ -156,72 +111,7 @@ class LoteServicio {
     }
   }
 
-  async traerSublotesDeUnDepositoProv(deposito_id, { offset, limit }) {
-    try {
-      const opciones = {
-        where: {
-          deposito: deposito_id
-        },
-        include: [
-          {
-            model: SubLote,
-            required: true,
-            where: {
-              cantidad: {
-                [Op.gt]: 0
-              }
-            },
-            include: [
-              {
-                model: Lote,
-                attributes: { exclude: ["cantidad", "fechaFabricacion", "fechaCompra"] },
-                required: true,
-                include: [
-                  {
-                    model: Vacuna,
-                    required: true,
-                    include: [
-                      {
-                        model: TipoVacuna,
-                        required: true
-                      },
-                      {
-                        model: Laboratorio,
-                        attributes: { exclude: ["pais_id"] },
-                        required: true
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-  
-      if (offset) opciones.offset = +offset;
-      if (limit) opciones.limit = +limit;
-  
-      const { rows, count } = await DistribucionNacional.findAndCountAll(opciones);
-  
-      const sublotes = rows.map(s => {
-        return {
-          tipoVacuna: s.SubLote.Lote.Vacuna.TipoVacuna.tipo,
-          cantidad: s.SubLote.cantidad,
-          vencimiento: Utils.formatearFecha(s.SubLote.Lote.vencimiento),
-          nombreComercial: s.SubLote.Lote.Vacuna.nombreComercial,
-          laboratorio: s.SubLote.Lote.Vacuna.Laboratorio.nombre,
-        };
-      });
-    
-      return { sublotes, cantidadSublotes: count };
-    } catch (e) {
-      console.error(e);
-      throw new Error("Error al traer el stock de sublotes");
-    }
-  }
-
-  async traerlotesDeUnDepositoNac(deposito_id, { offset, limit }) {
+  async traerLotesPorDeposito(deposito_id, { offset, limit, order, orderType }) {
     try {
       const opciones = {
         where: {
@@ -255,6 +145,7 @@ class LoteServicio {
   
       if (offset) opciones.offset = +offset;
       if (limit) opciones.limit = +limit;
+      if (order) opciones.order = [this.#calcularOrderEnTraerLotesPorDeposito(order, orderType)];
   
       const { rows, count } = await Almacena.findAndCountAll(opciones);
   
@@ -327,6 +218,32 @@ class LoteServicio {
     }
   
     return orden;
+  }
+
+  #calcularOrderEnTraerLotesPorDeposito(order, orderType) {
+    let orderArray;
+
+    if (order === "tipo-vacuna") {
+      orderArray = [Lote, Vacuna, TipoVacuna, "tipo", orderType];
+    }
+
+    if (order === "cantidad") {
+      orderArray = [Lote, "cantidad", orderType];
+    }
+
+    if (order === "vencimiento") {
+      orderArray = [Lote, "vencimiento", orderType];
+    }
+
+    if (order === "nombre-comercial") {
+      orderArray = [Lote, Vacuna, "nombreComercial", orderType];
+    }
+
+    if (order === "laboratorio") {
+      orderArray = [Lote, Vacuna, Laboratorio, "nombre", orderType];
+    }
+
+    return orderArray;
   }
 }
 

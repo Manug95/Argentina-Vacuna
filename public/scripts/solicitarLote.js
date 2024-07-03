@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 // }
 
 async function enviar(formValues) {
-  const res = await enviarPOST("/lotes/solicitar/nacion", formValues);
+  const res = await enviarPOST("/lotes/sublotes/nuevo", formValues);
   mostrarMensaje(res.ok, res.mensaje);
 }
 
