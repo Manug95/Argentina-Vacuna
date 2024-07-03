@@ -145,7 +145,7 @@ export default class LoteController {
     };
 
     try {
-      Object.assign(resultadosConsultas, await loteServicio.findAndCountAllSolicitudCompra(req.query));
+      Object.assign(resultadosConsultas, await loteServicio.traerSolicitudesDeCompra(req.query));
     }
     catch (error) {
       resultadosConsultas.error = true;
@@ -155,7 +155,7 @@ export default class LoteController {
         pretty: true,
         activeLink: "listado-sol",
         solicitudes: resultadosConsultas.solicitudes,
-        cantidadPaginadores: Math.floor(resultadosConsultas.count / 10 + 1),
+        paginadores: Math.floor(resultadosConsultas.count / 10 + 1) ?? 1,
         error: resultadosConsultas.error
       }));
     }
@@ -204,6 +204,31 @@ export default class LoteController {
 
       const limit = req.query.limit ?? 10;
       respuesta.paginadores = Math.floor(lotesDelDepositoSeleccionado.cantidadLotes / limit + 1) ?? 1;
+      
+    }
+    catch (error) {
+      respuesta.error = true;
+      status = 400;
+      console.log(error.message);
+    }
+    finally {
+      res.status(status).json(respuesta);
+    }
+
+    return;
+  }
+
+  static async listadoSolicitudesDeCompra(req, res) {
+    let status = 200;
+    const respuesta = {};
+
+    try {
+      const results = await loteServicio.traerSolicitudesDeCompra(req.query);
+
+      respuesta.solicitudes = results.solicitudes;
+
+      const limit = req.query.limit ?? 10;
+      respuesta.paginadores = Math.floor(results.count / limit + 1) ?? 1;
       
     }
     catch (error) {

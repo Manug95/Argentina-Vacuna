@@ -1,5 +1,7 @@
-label.form-label.fw-bold(for="deposito-Prov") Seleccionar deposito provicnial
-select#deposito-Prov(name="deposito", class="form-select cursor-pointer")
-    option(value="", selected, disabled) Seleccionar
-    each deposito in depositosProv 
-        option(value=deposito.id) #{deposito.nombre} 
+.position-relative
+    label.form-label.fw-bold(for="deposito-Prov") Seleccionar deposito provicnial
+    select#deposito-Prov(name="deposito", class="form-select cursor-pointer")
+        option(value="", selected, disabled) Seleccionar
+        each deposito in depositosProv 
+            option(value=deposito.id) #{deposito.nombre} 
+    .invalid-tooltip Este campo es requerido

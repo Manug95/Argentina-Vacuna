@@ -1,14 +1,19 @@
-import { getElementById } from "./frontUtils.js";
-import { renderizarTabla, crearFilaMensaje } from "./tablaStock.js";
+import { getElementById, removerClases } from "./frontUtils.js";
+import { renderizarTablaStock, crearFilaMensajeDeTablaStock } from "./tablaStock.js";
 import Paginador from "./paginador.js";
 import { enviarGET } from "./httpRequests.js";
+import { setInvalidInputStyle, validarFormSelect } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const paginador = new Paginador();
   paginador.setFuncionEnviarPeticionPaginador(eventoClicksDeLasPaginasDelPaginador(paginador.instanciaPaginador));
 
   getElementById("consultar-btn").addEventListener("click", async () => {
-    const id = getElementById("deposito-nac").value;
+    const selectDeposito = getElementById("deposito-Prov");
+    
+    if (!validarSelectDelDeposito(selectDeposito)) return;
+    
+    const id = selectDeposito.value;
     const { order, orderType } = obtenerOpcionesDeConsulta(paginador.instanciaPaginador);
     const limit = paginador.resultadosPorPagina;
 
@@ -18,15 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const { lotes, depositoSeleccionado } = datos;
       
       if (lotes.length > 0) {
-        renderizarTabla(lotes, depositoSeleccionado);
+        renderizarTablaStock(lotes, depositoSeleccionado);
         paginador.cantidadPaginadores = datos.paginadores;
       } else {
         paginador.resetCantidadPaginadores();
-        crearFilaMensaje("NO HAY STOCK EN ESTE DEPOSITO");
+        crearFilaMensajeDeTablaStock("NO HAY STOCK EN ESTE DEPOSITO");
       }
     } else {
       paginador.resetCantidadPaginadores();
-      crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
+      crearFilaMensajeDeTablaStock("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
     }
 
     paginador.actualizarPaginador();
@@ -49,10 +54,10 @@ function eventoClicksDeLasPaginasDelPaginador(paginador) {
     const datos = await enviarPeticion(idDepositoSeleccionado, { offset, limit, order, orderType });
     
     if (datos) {
-      renderizarTabla(datos.lotes, datos.depositoSeleccionado);
+      renderizarTablaStock(datos.lotes, datos.depositoSeleccionado);
     } else {
       paginador.resetCantidadPaginadores();
-      crearFilaMensaje("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
+      crearFilaMensajeDeTablaStock("NO SE PUDO CARGAR EL STOCK DEL DEPOSITO");
     }
 
     paginador.actualizarPaginador();
@@ -92,4 +97,17 @@ function obtenerOpcionesDeConsulta(paginador) {
   if (cantResults !== "") paginador.resultadosPorPagina = +cantResults;
 
   return { order, orderType };
+}
+
+function validarSelectDelDeposito(select) {
+  let isValid = true;
+
+  if (!validarFormSelect(select.value)) {
+    setInvalidInputStyle("deposito-Prov");
+    isValid = isValid && false;
+  } else {
+    removerClases(select, "is-invalid");
+  }
+
+  return isValid;
 }

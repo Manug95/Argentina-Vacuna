@@ -15,7 +15,9 @@ loteRouter.get("/stock", LoteController.VistaListadoLotes);
 // loteRouter.get("/nacion/:deposito_id", LoteController.listadoLotes);
 loteRouter.get("/stock/:deposito_id", LoteController.listadoLotes);
 
-loteRouter.get("/solicitudes-compra", LoteController.vistaListadoSolicitudesDeCompra);
+loteRouter.get("/vista-solicitudes-compra", LoteController.vistaListadoSolicitudesDeCompra);
+
+loteRouter.get("/solicitudes-compra", LoteController.listadoSolicitudesDeCompra);
 
 loteRouter.post("/nuevo", LoteController.crear);
 

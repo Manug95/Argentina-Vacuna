@@ -12,8 +12,6 @@ personalizar el mensaje se error al solicitar vacunas.
 
 en los formularios de compra/solicitudes, que venga seleccionado el deposito/centro en que trabaja el usuario
 
-refactorear los metodos enviar de httpREquest.js para que no sean ellos los que abren el modal mensaje.
-
-crear un servicio que guarde un estado para las operaciones comunes.
+llenar la tabla de solicitudes de compra para probar la paginacion de la vista de las solicitudes de compra
 
 refactorizar listadoLote.js y listadoSubLote.js porque hacen casi lo mismo

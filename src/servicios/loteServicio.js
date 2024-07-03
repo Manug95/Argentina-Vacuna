@@ -20,15 +20,19 @@ class LoteServicio {
     instanciaServicio = this;
   }
 
-  async findAndCountAllSolicitudCompra(queryParams) {
+  async traerSolicitudesDeCompra(queryParams) {
     try {
       const { count, rows } = await SolicitudCompra.findAndCountAll(this.#crearOpcionesDeListado(queryParams));
   
       const solicitudes = rows
       .map(s => s.toJSON())
       .map(s => {
-        s.fechaSolicitud = Utils.formatearFecha(s.fechaSolicitud);
-        return s;
+        return {
+          tipoVacuna: s.TipoVacuna.tipo,
+          cantidad: s.cantidad,
+          fechaSolicitud: Utils.formatearFecha(s.fechaSolicitud),
+          tipoVacunaId: s.TipoVacuna.id
+        };
       });
   
       return { solicitudes, count };
@@ -166,7 +170,7 @@ class LoteServicio {
     }
   }
 
-  #crearOpcionesDeListado({ orden, dir, offset, limit }) {
+  #crearOpcionesDeListado({ order, orderType, offset, limit }) {
     // orden: "tipo", "fecha", "cantidad", "estado"
     const opciones = {};
   
@@ -183,8 +187,8 @@ class LoteServicio {
       estado: "PENDIENTE"
     };
   
-    if (orden) {
-      opciones.order = [this.#calcularElOrdenDelListadoDeSolicitudes(orden, dir)];
+    if (order) {
+      opciones.order = [this.#calcularElOrdenDelListadoDeSolicitudes(order, orderType)];
     }
   
     if (offset) {
@@ -192,7 +196,7 @@ class LoteServicio {
     }
   
     if (limit) {
-      opciones.limit = limit;
+      opciones.limit = +limit;
     }
   
     return opciones;
@@ -201,7 +205,7 @@ class LoteServicio {
   #calcularElOrdenDelListadoDeSolicitudes(order, direccion) {
     const orden = [];
   
-    if (order === "tipo") {
+    if (order === "tipo-vacuna") {
       orden.push(...[TipoVacuna, "tipo", direccion]);
     }
   
@@ -213,9 +217,9 @@ class LoteServicio {
       orden.push(...["cantidad", direccion]);
     }
   
-    if (order === "estado") {
-      orden.push(...["estado", direccion]);
-    }
+    // if (order === "estado") {
+    //   orden.push(...["estado", direccion]);
+    // }
   
     return orden;
   }
